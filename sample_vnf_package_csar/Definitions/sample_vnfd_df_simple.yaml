@@ -83,7 +83,7 @@ topology_template:
             virtual_cpu:
               num_virtual_cpu: 1
             virtual_local_storage:
-              - size_of_storage: 1 GB
+              - size_of_storage: 5 GB
 
     CP1:
       type: tosca.nodes.nfv.VduCp
@@ -180,4 +180,3 @@ topology_template:
                 root: 1048576
                 leaf: 1048576
         targets: [ internalVL1 ]
-

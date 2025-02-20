@@ -1,0 +1,33 @@
+{
+    "flavourId": "simple",
+    "extVirtualLinks": [
+      {
+        "extCps": [
+          {
+            "cpConfig": [
+              {
+                "cpProtocolData": [
+                  {
+                    "layerProtocol": "IP_OVER_ETHERNET",
+                    "ipOverEthernet": {
+                      "ipAddresses": [
+                        {
+                          "subnetId": "f4a181c0-c39a-466b-b61e-3c97360f96bc", 
+                          "type": "IPV4"
+                 
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "cpdId": "VDU_extCP"
+          }
+
+        ],
+        "id": "net0",
+        "resourceId": "998127d8-cd07-4ee4-8f60-f8ffe1b8353d" 
+      }
+    ]
+  }
