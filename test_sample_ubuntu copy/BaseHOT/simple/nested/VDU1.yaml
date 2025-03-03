@@ -4,7 +4,7 @@ description: 'Sample VDU HOT'
 parameters:
   flavor:
     type: string
-  image-VDU1-VirtualStorage:
+  image:
     type: string
   zone:
     type: string
@@ -18,8 +18,6 @@ parameters:
     type: string
   ip_address:
     type: string
-  volume_type:
-    type: string
   security_group:
     type: string
     default: default
@@ -30,20 +28,13 @@ resources:
     properties:
       flavor: { get_param: flavor }
       name: VDU1
-      block_device_mapping_v2: [{"volume_id": { get_resource: VDU1-VirtualStorage }}]
+      image: { get_param: image }
       networks:
       - port:
           get_resource: VDU1_CP0
       - port:
           get_resource: VDU1_CP1
       availability_zone: { get_param: zone }
-
-  VDU1-VirtualStorage:
-    type: OS::Cinder::Volume
-    properties:
-      image: { get_param: image-VDU1-VirtualStorage }
-      size: 1
-      volume_type: { get_param: volume_type }
 
   # internal VL
   VDU1_CP0:

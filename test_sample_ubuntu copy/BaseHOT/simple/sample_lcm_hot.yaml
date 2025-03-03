@@ -31,21 +31,14 @@ resources:
         type: VDU1.yaml
         properties:
           flavor: { get_param: [ nfv, VDU, VDU1, computeFlavourId ] }
-          image-VDU1-VirtualStorage: { get_param: [ nfv, VDU, VDU1-VirtualStorage, vcImageId ] }
+          image: { get_param: [ nfv, VDU, VDU1, vcImageId ] }
           zone: { get_param: [ nfv, VDU, VDU1, locationConstraints] }
           net1: { get_resource: internalVL1 }
           net2: { get_param: [ nfv, CP, VDU1_CP1, network ] }
           # subnet1: { get_param: [nfv, CP, VDU1_CP0, fixed_ips, 0, subnet ]}
           subnet2: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet ]}
           ip_address: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, ip_address ]}
-          volume_type: { get_resource: VDU1-VolumeType }
           security_group: { get_param: security_group }
-
-  VDU1-VolumeType:
-    type: OS::Cinder::VolumeType
-    properties:
-      name: VDU1-multi
-      metadata: { multiattach: "<is> True" }
 
  
 outputs: {}
