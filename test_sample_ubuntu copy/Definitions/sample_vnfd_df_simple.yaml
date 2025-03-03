@@ -32,12 +32,8 @@ topology_template:
     node_type: company.provider.VNF
     properties:
       flavour_id: simple
-      substitution_mappings:
-    node_type: Sample.VNF.Node
-    properties:
-      flavour_id: scalable
-    requirements:
-      VDU1_extnet: [ VDU1_CP1, external_virtual_link ]
+      requirements:
+        - VDU1_extnet: [ VDU1_CP1, external_virtual_link ]
       
   node_templates:
     VNF:
@@ -147,8 +143,8 @@ topology_template:
             - associated_layer_protocol: ipv4
               l3_protocol_data:
                 ip_version: ipv4
-                cidr: 10.0.0.0/24
-      
+                cidr: 192.168.0.0/24
+
   policies:
     - scaling_aspects:
         type: tosca.policies.nfv.ScalingAspects

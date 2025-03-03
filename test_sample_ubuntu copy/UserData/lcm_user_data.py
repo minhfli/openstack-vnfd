@@ -120,7 +120,7 @@ class DefaultUserData(userdata_utils.AbstractUserData):
                     cp_name, grant, req)
             if 'fixed_ips' in cp_value:
                 ext_fixed_ips = common_script_utils.get_param_fixed_ips(
-                    cp_name, grant, req)
+                    cp_name, grant, req)  
                 fixed_ips = []
                 for i in range(len(ext_fixed_ips)):
                     if i not in cp_value['fixed_ips']:
@@ -128,11 +128,15 @@ class DefaultUserData(userdata_utils.AbstractUserData):
                     ips_i = cp_value['fixed_ips'][i]
                     if 'subnet' in ips_i:
                         ips_i['subnet'] = ext_fixed_ips[i].get('subnet')
+                        
                     if 'ip_address' in ips_i:
                         ips_i['ip_address'] = ext_fixed_ips[i].get(
                             'ip_address')
                     fixed_ips.append(ips_i)
+                if len(fixed_ips) ==0: 
+                    raise Exception('No fixed IPs provided for CP %s' % cp_name, f'fixed_ips: {fixed_ips}')
                 cp_value['fixed_ips'] = fixed_ips
+                                
 
         common_script_utils.apply_ext_managed_vls(top_hot, req, grant)
 

@@ -648,8 +648,7 @@ data_types:
         description: Identifies the performance metric, according to ETSI GS NFV-IFA 027.
         required: true
         constraints:
-          - valid_values: [ v_cpu_usage_mean_vnf, v_cpu_usage_peak_vnf, v_memory_usage_mean_vnf, v_memory_usage_peak_vnf, v_disk_usage_mean_vnf, v_disk_usage_peak_vnf, byte_incoming_vnf_ext_cp, byte_outgoing_vnf_ext_cp, 
-packet_incoming_vnf_ext_cp, packet_outgoing_vnf_ext_cp ]
+          - valid_values: [ v_cpu_usage_mean_vnf, v_cpu_usage_peak_vnf, v_memory_usage_mean_vnf, v_memory_usage_peak_vnf, v_disk_usage_mean_vnf, v_disk_usage_peak_vnf, byte_incoming_vnf_ext_cp, byte_outgoing_vnf_ext_cp, packet_incoming_vnf_ext_cp, packet_outgoing_vnf_ext_cp ]
       collection_period:
         type: scalar-unit.time
         description: Describes the periodicity at which to collect the performance information.

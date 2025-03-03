@@ -32,12 +32,8 @@ topology_template:
     node_type: company.provider.VNF
     properties:
       flavour_id: simple
-      substitution_mappings:
-    node_type: Sample.VNF.Node
-    properties:
-      flavour_id: scalable
-    requirements:
-      VDU1_extnet: [ VDU1_CP1, external_virtual_link ]
+      requirements:
+        - VDU1_extnet: [ VDU1_CP1, external_virtual_link ]
       
   node_templates:
     VNF:

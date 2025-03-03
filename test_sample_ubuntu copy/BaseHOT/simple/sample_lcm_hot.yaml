@@ -21,49 +21,32 @@ resources:
         get_resource: internalVL1
       cidr: 192.168.0.0/24
 
-  VDU1:
+  VDU1_scale_group:
     type: OS::Heat::AutoScalingGroup
     properties:
-      cooldown: 120
-      desired_capacity: { get_param: [nfv, VDU, VDU1, number_of_instance ] }
-      max_size: 3
       min_size: 1
+      max_size: 3
+      desired_capacity: { get_param: [ nfv, VDU, VDU1, desired_capacity ] }
       resource:
         type: VDU1.yaml
         properties:
-          Image: { get_param: [ nfv, VDU, VDU1, image ] }
-          Flavor: { get_param: [ nfv, VDU, VDU1, flavor ] }
-          IntNetwork: { get_resource: internalVL1 }
-          IntFixedIP: 192.168.0.10
-          ExtNetwork: { get_param: [ nfv, CP, VDU1_CP1, network_id ] }
-          ExtFixedIP:
-            get_param: [ nfv, CP, VDU1_CP1, subnets, 0, fixed_ip_addresses, 0 ]
-          AvailabilityZone: { get_param: vdu2_availabilityzone }
-          Server_Group: { get_resource: vdu_placement_policy }
+          flavor: { get_param: [ nfv, VDU, VDU1, computeFlavourId ] }
+          image-VDU1-VirtualStorage: { get_param: [ nfv, VDU, VDU1-VirtualStorage, vcImageId ] }
+          zone: { get_param: [ nfv, VDU, VDU1, locationConstraints] }
+          net1: { get_resource: internalVL1 }
+          net2: { get_param: [ nfv, CP, VDU1_CP1, network ] }
+          # subnet1: { get_param: [nfv, CP, VDU1_CP0, fixed_ips, 0, subnet ]}
+          subnet2: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet ]}
+          ip_address: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, ip_address ]}
+          volume_type: { get_resource: VDU1-VolumeType }
+          security_group: { get_param: security_group }
 
-  VDU1_scale_in:
-    type: OS::Heat::ScalingPolicy
+  VDU1-VolumeType:
+    type: OS::Cinder::VolumeType
     properties:
-      adjustment_type: change_in_capacity
-      auto_scaling_group_id:
-        get_resource: VDU1
-      cooldown: 120
-      scaling_adjustment: -1
+      name: VDU1-multi
+      metadata: { multiattach: "<is> True" }
 
-  VDU1_scale_out:
-    type: OS::Heat::ScalingPolicy
-    properties:
-      adjustment_type: change_in_capacity
-      auto_scaling_group_id:
-        get_resource: VDU1
-      cooldown: 120
-      scaling_adjustment: 1
-
-  vdu_placement_policy:
-    type: OS::Nova::ServerGroup
-    properties:
-      name: vdu_placement_policy
-      policies:
-        - soft-anti-affinity
+ 
 outputs: {}
 

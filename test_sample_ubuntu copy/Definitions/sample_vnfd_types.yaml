@@ -15,11 +15,11 @@ node_types:
         default: a1bb0ce7-ebca-4fa7-95ed-4840d70a1177
       descriptor_version:
         type: string
-        constraints: [ valid_values: [ '1.0' ] ]
+        # constraints: [ valid_values: [ '1.0' ] ]
         default: '1.0'
       provider:
         type: string
-        constraints: [ valid_values: [ 'Company' ] ]
+        # constraints: [ valid_values: [ 'Company' ] ]
         default: 'Company'
       product_name:
         type: string
@@ -27,13 +27,13 @@ node_types:
         default: 'Sample VNF'
       software_version:
         type: string
-        constraints: [ valid_values: [ '1.0' ] ]
+        # constraints: [ valid_values: [ '1.0' ] ]
         default: '1.0'
       vnfm_info:
         type: list
         entry_schema:
           type: string
-          constraints: [ valid_values: [ Tacker ] ]
+          # constraints: [ valid_values: [ Tacker ] ]
         default: [ Tacker ]
       flavour_id:
         type: string

@@ -2,76 +2,61 @@ heat_template_version: rocky
 description: 'Sample VDU HOT'
 
 parameters:
-
-  Image:
+  flavor:
     type: string
-    constraints:
-      - custom_constraint: 'glance.image'
-
-  Flavor:
+  image-VDU1-VirtualStorage:
     type: string
-    default: "m1.tiny"
-
-  ExtNetwork:
+  zone:
     type: string
-    constraints:
-      - custom_constraint: 'neutron.network'
-
-  IntNetwork:
+  net1:
     type: string
-    constraints:
-      - custom_constraint: 'neutron.network'
-
-  ExtFixedIP:
+  net2:
     type: string
-
-  IntFixedIP:
+  # subnet1:
+  #   type: string
+  subnet2:
     type: string
-
-  AvailabilityZone:
+  ip_address:
     type: string
-    default: "nova"
-
-  Server_Group:
+  volume_type:
     type: string
+  security_group:
+    type: string
+    default: default
 
 resources:
-
   VDU1:
     type: OS::Nova::Server
-    depends_on: [ VDU1_CP0, VDU1_CP1 ]
     properties:
+      flavor: { get_param: flavor }
       name: VDU1
-      flavor: { get_param: Flavor }
-      image: { get_param: Image }
+      block_device_mapping_v2: [{"volume_id": { get_resource: VDU1-VirtualStorage }}]
       networks:
-        - port:
-            get_resource: VDU1_CP0
-        - port:
-            get_resource: VDU1_CP1
-      availability_zone: { get_param: AvailabilityZone }
-      scheduler_hints:
-        group:
-          get_param: Server_Group
+      - port:
+          get_resource: VDU1_CP0
+      - port:
+          get_resource: VDU1_CP1
+      availability_zone: { get_param: zone }
 
+  VDU1-VirtualStorage:
+    type: OS::Cinder::Volume
+    properties:
+      image: { get_param: image-VDU1-VirtualStorage }
+      size: 1
+      volume_type: { get_param: volume_type }
+
+  # internal VL
   VDU1_CP0:
     type: OS::Neutron::Port
     properties:
-      network:
-        get_param: IntNetwork
-      fixed_ips:
-        - ip_address: { get_param: IntFixedIP }
+      network: { get_param: net1 }
 
+  # extVL with numDynamicAddresses and subnet
   VDU1_CP1:
     type: OS::Neutron::Port
     properties:
-      network:
-        get_param: ExtNetwork
+      network: { get_param: net2 }
       fixed_ips:
-        - ip_address: { get_param: ExtFixedIP }
+      # - subnet: { get_param: subnet2 }
+      - ip_address: { get_param: ip_address }
 
-outputs:
-
-  mgmt_ip-VDU1:
-    value:
-      get_attr: [ VDU1_CP0, fixed_ips, 0, ip_address ]
