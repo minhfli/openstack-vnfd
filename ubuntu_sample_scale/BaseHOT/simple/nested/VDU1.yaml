@@ -48,6 +48,6 @@ resources:
     properties:
       network: { get_param: net2 }
       fixed_ips:
-      # - subnet: { get_param: subnet2 }
-      - ip_address: { get_param: ip_address }
+      - subnet: { get_param: subnet2 }
+      # - ip_address: { get_param: ip_address }
 
