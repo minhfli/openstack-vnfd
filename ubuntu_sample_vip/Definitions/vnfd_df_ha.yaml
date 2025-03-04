@@ -1,0 +1,226 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+description: Simple deployment flavour for Sample VNF
+
+imports:
+  - etsi_nfv_sol001_common_types.yaml
+  - etsi_nfv_sol001_vnfd_types.yaml
+  - vnfd_types.yaml
+
+topology_template:
+  inputs:
+    descriptor_id:
+      type: string
+    descriptor_version:
+      type: string
+    provider:
+      type: string
+    product_name:
+      type: string
+    software_version:
+      type: string
+    vnfm_info:
+      type: list
+      entry_schema:
+        type: string
+    flavour_id:
+      type: string
+    flavour_description:
+      type: string
+
+  substitution_mappings:
+    node_type: company.provider.VNF
+    properties:
+      flavour_id: ha
+      requirements:
+        - VDU1_extnet: [VDU1_CP1, external_virtual_link]
+        - VDU_extnet: [VDU_extvCP, external_virtual_link]
+        - RT_extnet: [RT_extCP, external_virtual_link]
+
+  node_templates:
+    VNF:
+      type: company.provider.VNF
+      properties:
+        flavour_description: High availability flavour
+      interfaces:
+        Vnflcm:
+          instantiate_start: []
+          instantiate_end: []
+          terminate_start: []
+          terminate_end: []
+          modify_information_start: []
+          modify_information_end: []
+          heal_start: []
+          heal_end: []
+          scale_start: []
+          scale_end: []
+
+    VDU1:
+      type: tosca.nodes.nfv.Vdu.Compute
+      properties:
+        name: VDU1
+        description: VDU1 compute node
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 3
+        sw_image_data:
+          name: ubuntu-noble
+          version: "24.04"
+          checksum:
+            algorithm: sha-512
+            hash: 6c646b9a773d3f59ef11c29990d046a48474728dfc3f758d1e2cec7c0830f8fafd12e7b79895af9de375ba6e616321dcf4f3fb070ef344c11343325fc608201a
+          container_format: bare
+          disk_format: qcow2
+          min_disk: 5 GB
+          size: 5 GB
+      capabilities:
+        virtual_compute:
+          properties:
+            requested_additional_capabilities:
+              properties:
+                requested_additional_capability_name: f1.test
+                support_mandatory: true
+                target_performance_parameters:
+                  entry_schema: test
+            virtual_memory:
+              virtual_mem_size: 1024 MB
+            virtual_cpu:
+              num_virtual_cpu: 1
+            virtual_local_storage:
+              - size_of_storage: 5 GB
+
+    VDU1_CP0:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        order: 0
+        bitrate_requirement: 1
+        vnic_type: normal
+        layer_protocols: [ipv4]
+        protocol:
+          - associated_layer_protocol: ipv4
+            address_data:
+              - address_type: ip_address
+                l3_address_data:
+                  ip_address_assignment: true
+                  floating_ip_activated: false
+      requirements:
+        - virtual_binding: VDU1
+        - virtual_link: internalVL1
+
+    VDU1_CP1:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        order: 0
+        bitrate_requirement: 1
+        vnic_type: normal
+        layer_protocols: [ipv4]
+        protocol:
+          - associated_layer_protocol: ipv4
+            address_data:
+              - address_type: ip_address
+                l3_address_data:
+                  ip_address_assignment: true
+                  floating_ip_activated: false
+      requirements:
+        - virtual_binding: VDU1
+
+    internalVL1:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocols: [ipv4]
+        description: Internal Virtual link in the VNF
+        vl_profile:
+          max_bitrate_requirements:
+            root: 1048576
+            leaf: 1048576
+          min_bitrate_requirements:
+            root: 1048576
+            leaf: 1048576
+          virtual_link_protocol_data:
+            - associated_layer_protocol: ipv4
+              l3_protocol_data:
+                ip_version: ipv4
+                cidr: 192.168.0.0/24
+
+    RT_extCP:
+      type: tosca.nodes.nfv.VnfExtCp
+      properties:
+        layer_protocols: [ipv4]
+      requirements:
+        - internal_virtual_link: internalVL1
+
+    VDU_extvCP:
+      type: tosca.nodes.nfv.VnfExtCp
+      properties:
+        layer_protocols: [ipv4]
+      requirements:
+        - internal_virtual_link: internalVL1
+
+  policies:
+    - scaling_aspects:
+        type: tosca.policies.nfv.ScalingAspects
+        properties:
+          aspects:
+            VDU1_scale:
+              name: VDU1_scale
+              description: VDU1 scaling aspect
+              max_scale_level: 2
+              step_deltas:
+                - delta_1
+
+    - VDU1_initial_delta:
+        type: tosca.policies.nfv.VduInitialDelta
+        properties:
+          initial_delta:
+            number_of_instances: 1
+        targets: [VDU1]
+
+    - VDU1_scaling_aspect_deltas:
+        type: tosca.policies.nfv.VduScalingAspectDeltas
+        properties:
+          aspect: VDU1_scale
+          deltas:
+            delta_1:
+              number_of_instances: 1
+        targets: [VDU1]
+
+    - instantiation_levels:
+        type: tosca.policies.nfv.InstantiationLevels
+        properties:
+          levels:
+            instantiation_level_1:
+              description: Smallest size
+              scale_info:
+                VDU1_scale:
+                  scale_level: 0
+            instantiation_level_2:
+              description: Largest size
+              scale_info:
+                VDU1_scale:
+                  scale_level: 2
+          default_level: instantiation_level_1
+
+    - VDU1_instantiation_levels:
+        type: tosca.policies.nfv.VduInstantiationLevels
+        properties:
+          levels:
+            instantiation_level_1:
+              number_of_instances: 1
+            instantiation_level_2:
+              number_of_instances: 3
+        targets: [VDU1]
+
+    - internalVL1_instantiation_levels:
+        type: tosca.policies.nfv.VirtualLinkInstantiationLevels
+        properties:
+          levels:
+            instantiation_level_1:
+              bitrate_requirements:
+                root: 1048576
+                leaf: 1048576
+            instantiation_level_2:
+              bitrate_requirements:
+                root: 1048576
+                leaf: 1048576
+        targets: [internalVL1]
