@@ -147,11 +147,9 @@ class DefaultUserData(userdata_utils.AbstractUserData):
             nfv_dict = inst_utils.json_merge_patch(nfv_dict,
                     grant['additionalParams']['nfv'])
 
-        api_params = req.get('additionalParams', {})
-        
         fields = {
             'template': yaml.safe_dump(top_hot),
-            'parameters': {'nfv': nfv_dict, "api_params":api_params},
+            'parameters': {'nfv': nfv_dict},
             'files': {}
         }
         for key, value in hot_dict.get('files', {}).items():

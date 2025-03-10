@@ -1,32 +1,31 @@
 # VNFD package
 
+mostly unfinished
+
 ## description
 
-one scalable VDU with 2 CP
-CP0 is connected to internalVL
-CP1 is connected to external network: net0 (see param.json)
+### flavor: simple
 
-## some note
-in param.json file, fixed ip address is not used, because 2 VM (basically VDU scale into 2 or more instances) can not have the same ip
-see more in BaseHOT VDU1.yaml, I use subnet instead of fixedIP
-if your VDU cannot scale or only scale from 0 to 1, you can use fixedIP
-otherwise, you have to use a virtual IP
+the same as scale package
+one scalable VDU with 2 CP per instance, the ips are not fixed
+CP0 connect to internal virtual link
+CP1 connect to external network
 
-in df_simple.param file, I used ubuntu 24 server image
-If you just want to test, change it to cirros, or you can change it into anything (you has to have uploaded os image to openstack)
+### flavor: ha
 
-## scaling
+one scalable VDU (1-3 intances)
+one CP per instance, connect to internal VL, the ips are not fixed
+one router connect internalVL to external network
+one CP (port) in internalVL, act as Virtual Ip
+2-4 floating IP, associated to each CP
 
-### list stack, find your stack with status CREATE_COMPLETE
-openstack stack list --nested -c 'ID' -c 'Stack Name' -c 'Stack Status' -c 'Parent' --os-tacker-api-version 2
+this flavor setup a virtual ip for 1 scalable VDU (1-3 instances) of heatAutoScalingGroup
+But there are more thing to do, you need to
 
+- config VM image to make it work with VIP (helpful article: https://medium.com/@nuriel_25979/virtual-ip-with-openstack-neutron-dd9378a48bdf)
+- I didnt fully check if the ha flavor works correctly, but the simple flavor should works
 
-### scale
-WORKER_INSTANCE: see   vnfd - topology_template - policies - scaling_aspects
-VNF_INSTANCE_ID: see in horizon or the stack above
+### note
 
-openstack vnflcm --os-tacker-api-version 2 scale --type SCALE_OUT --aspect-id WORKER_INSTANCE VNF_INSTANCE_ID
-openstack vnflcm --os-tacker-api-version 2 scale --type SCALE_OUT --aspect-id VDU1_scale 0a13ee34-ad60-44fa-9feb-3f83b0d6c5a5
-
-### check again
-openstack stack list --nested -c 'ID' -c 'Stack Name' -c 'Stack Status' -c 'Parent' --os-tacker-api-version 2
+I actually want a load balancer, so I need to somehow make the scalable VDU use some fixed ip addresses
+see scale_lb package

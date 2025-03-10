@@ -1,45 +1,95 @@
 heat_template_version: 2013-05-23
-description: 'imple Base HOT for Sample VNF'
+description: "imple Base HOT for Sample VNF"
 
 parameters:
   nfv:
     type: json
-  security_group:
-    type: string
-    default: default
+  api_params:
+    type: json
 
 resources:
+  # internal VL
   internalVL1:
     type: OS::Neutron::Net
 
   internalVL1_subnet:
     type: OS::Neutron::Subnet
-    depends_on: [ internalVL1 ]
+    depends_on: [internalVL1]
     properties:
       ip_version: 4
       network:
         get_resource: internalVL1
       cidr: 192.168.0.0/24
+      gateway_ip: 192.168.0.254
+      enable_dhcp: true
+
+  # router
+  router:
+    type: OS::Neutron::Router
+    properties:
+      name: NFV_Router_1
+      admin_state_up: true
+      external_gateway_info:
+        network: { get_param: [nfv, CP, RT_extCP, network] }
+        external_fixed_ips:
+          - ip_address:
+              get_param: [nfv, CP, RT_extCP, fixed_ips, 0, ip_address]
+
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    depends_on:
+      - router
+      - internalVL1_subnet
+    properties:
+      router: { get_resource: router }
+      subnet: { get_resource: internalVL1_subnet }
 
   VDU1_scale_group:
     type: OS::Heat::AutoScalingGroup
+    depends_on:
+      - internalVL1_subnet
+      - router_interface
     properties:
       min_size: 1
       max_size: 3
-      desired_capacity: { get_param: [ nfv, VDU, VDU1, desired_capacity ] }
+      desired_capacity: { get_param: [nfv, VDU, VDU1, desired_capacity] }
       resource:
         type: VDU1.yaml
         properties:
-          flavor: { get_param: [ nfv, VDU, VDU1, computeFlavourId ] }
-          image: { get_param: [ nfv, VDU, VDU1, vcImageId ] }
-          zone: { get_param: [ nfv, VDU, VDU1, locationConstraints] }
+          flavor: { get_param: [nfv, VDU, VDU1, computeFlavourId] }
+          image: { get_param: [nfv, VDU, VDU1, vcImageId] }
+          zone: { get_param: [nfv, VDU, VDU1, locationConstraints] }
           net1: { get_resource: internalVL1 }
-          net2: { get_param: [ nfv, CP, VDU1_CP1, network ] }
+          net2: { get_param: [nfv, CP, VDU1_CP1, network] }
           # subnet1: { get_param: [nfv, CP, VDU1_CP0, fixed_ips, 0, subnet ]}
-          subnet2: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet ]}
-          ip_address: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, ip_address ]}
-          security_group: { get_param: security_group }
+          subnet2: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+          ip_address:
+            { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, ip_address] }
+          security_group: { get_param: [api_params, security_group] }
 
- 
+  # virtual CP for internal VL
+  VDU_vCP:
+    type: OS::Neutron::Port
+    depends_on:
+      - internalVL1_subnet
+    properties:
+      network: { get_resource: internalVL1 }
+      fixed_ips:
+        - ip_address: 192.168.0.10
+      security_groups: [{ get_param: [api_params, security_group] }]
+
+  # virtual CP for external VL
+  VDU_extvCP:
+    type: OS::Neutron::FloatingIP
+    depends_on:
+      - VDU_vCP
+      - router_interface
+    properties:
+      fixed_ip_address: 192.168.0.10
+      floating_ip_address:
+        get_param: [nfv, CP, VDU_extvCP, fixed_ips, 0, ip_address]
+      floating_network:
+        get_param: [nfv, CP, VDU_extvCP, network]
+      port_id: { get_resource: VDU_vCP }
+
 outputs: {}
-

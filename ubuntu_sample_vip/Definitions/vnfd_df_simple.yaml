@@ -33,8 +33,8 @@ topology_template:
     properties:
       flavour_id: simple
       requirements:
-        - VDU1_extnet: [ VDU1_CP1, external_virtual_link ]
-      
+        - VDU1_extnet: [VDU1_CP1, external_virtual_link]
+
   node_templates:
     VNF:
       type: company.provider.VNF
@@ -42,7 +42,6 @@ topology_template:
         flavour_description: A simple flavour
       requirements:
 
-      
       interfaces:
         Vnflcm:
           instantiate_start: []
@@ -65,11 +64,11 @@ topology_template:
           min_number_of_instances: 1
           max_number_of_instances: 3
         sw_image_data:
-          name: ubuntu-noble
-          version: '24.04'
+          name: ubuntu-noble-apache
+          version: "24.04"
           checksum:
             algorithm: sha-512
-            hash: 6c646b9a773d3f59ef11c29990d046a48474728dfc3f758d1e2cec7c0830f8fafd12e7b79895af9de375ba6e616321dcf4f3fb070ef344c11343325fc608201a
+            hash: cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e
           container_format: bare
           disk_format: qcow2
           min_disk: 5 GB
@@ -96,7 +95,7 @@ topology_template:
         order: 0
         bitrate_requirement: 1
         vnic_type: normal
-        layer_protocols: [ ipv4 ]
+        layer_protocols: [ipv4]
         protocol:
           - associated_layer_protocol: ipv4
             address_data:
@@ -114,7 +113,7 @@ topology_template:
         order: 0
         bitrate_requirement: 1
         vnic_type: normal
-        layer_protocols: [ ipv4 ]
+        layer_protocols: [ipv4]
         protocol:
           - associated_layer_protocol: ipv4
             address_data:
@@ -124,13 +123,12 @@ topology_template:
                   floating_ip_activated: false
       requirements:
         - virtual_binding: VDU1
-  
 
     internalVL1:
       type: tosca.nodes.nfv.VnfVirtualLink
       properties:
         connectivity_type:
-          layer_protocols: [ ipv4 ]
+          layer_protocols: [ipv4]
         description: Internal Virtual link in the VNF
         vl_profile:
           max_bitrate_requirements:
@@ -162,7 +160,7 @@ topology_template:
         properties:
           initial_delta:
             number_of_instances: 1
-        targets: [ VDU1 ]
+        targets: [VDU1]
 
     - VDU1_scaling_aspect_deltas:
         type: tosca.policies.nfv.VduScalingAspectDeltas
@@ -171,7 +169,7 @@ topology_template:
           deltas:
             delta_1:
               number_of_instances: 1
-        targets: [ VDU1 ]
+        targets: [VDU1]
 
     - instantiation_levels:
         type: tosca.policies.nfv.InstantiationLevels
@@ -197,7 +195,7 @@ topology_template:
               number_of_instances: 1
             instantiation_level_2:
               number_of_instances: 3
-        targets: [ VDU1 ]
+        targets: [VDU1]
 
     - internalVL1_instantiation_levels:
         type: tosca.policies.nfv.VirtualLinkInstantiationLevels
@@ -211,5 +209,4 @@ topology_template:
               bitrate_requirements:
                 root: 1048576
                 leaf: 1048576
-        targets: [ internalVL1 ]
-
+        targets: [internalVL1]
