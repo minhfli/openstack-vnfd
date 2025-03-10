@@ -16,19 +16,19 @@ node_types:
       descriptor_version:
         type: string
         # constraints: [ valid_values: [ '1.0' ] ]
-        default: '1.0'
+        default: "1.0"
       provider:
         type: string
         # constraints: [ valid_values: [ 'Company' ] ]
-        default: 'Company'
+        default: "Company"
       product_name:
         type: string
         # constraints: [ valid_values: [ 'Sample VNF' ] ]
-        default: 'Sample VNF'
+        default: "Sample VNF"
       software_version:
         type: string
         # constraints: [ valid_values: [ '1.0' ] ]
-        default: '1.0'
+        default: "1.0"
       vnfm_info:
         type: list
         entry_schema:
@@ -37,7 +37,7 @@ node_types:
         default: [Tacker]
       flavour_id:
         type: string
-        constraints: [valid_values: [simple, ha]]
+        constraints: [valid_values: [simple, index, fixed]]
         default: simple
       flavour_description:
         type: string

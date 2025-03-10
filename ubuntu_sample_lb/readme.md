@@ -1,6 +1,10 @@
 # VNFD package
 
-mostly unfinished
+!! unfinished
+
+!! remember to change image information (name (must) and hash (not sure if required)) in the Definitions/vnfd*df*...yaml file
+
+or create image with the same name
 
 ## description
 
@@ -8,10 +12,16 @@ mostly unfinished
 
 the same as scale package
 
-### flavor: lb
+## 2 approach:
 
-I'm trying to change the UserData script from
+### flavor: dynamic (currently working on)
 
-https://docs.openstack.org/tacker/latest/user/userdata_script.html#sample-userdata-script-for-not-using-autoscalinggroup
+using heat template output to get fixed ips of the spawned instances
 
-to make the scalable VDU use fixed IP
+### flavor: inded
+
+using %index% on heat resource group for name and ip address
+
+### flavor: fixed
+
+Trying to change the UserData script to make the scalable VDU use some fixed IPs

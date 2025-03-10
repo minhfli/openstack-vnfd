@@ -1,0 +1,48 @@
+heat_template_version: 2013-05-23
+description: "imple Base HOT for Sample VNF"
+
+parameters:
+  nfv:
+    type: json
+  security_group:
+    type: string
+    default: default
+  api_params:
+    type: json
+
+resources:
+  internalVL1:
+    type: OS::Neutron::Net
+
+  internalVL1_subnet:
+    type: OS::Neutron::Subnet
+    depends_on: [internalVL1]
+    properties:
+      ip_version: 4
+      network:
+        get_resource: internalVL1
+      cidr: 192.168.0.0/24
+
+  VDU1_scale_group:
+    type: OS::Heat::AutoScalingGroup
+    properties:
+      min_size: 1
+      max_size: 3
+      desired_capacity: { get_param: [nfv, VDU, VDU1, desired_capacity] }
+      resource:
+        type: VDU1.yaml
+        properties:
+          index: _%index%
+          name: VDU1_%index%
+          flavor: { get_param: [nfv, VDU, VDU1, computeFlavourId] }
+          image: { get_param: [nfv, VDU, VDU1, vcImageId] }
+          zone: { get_param: [nfv, VDU, VDU1, locationConstraints] }
+          net1: { get_resource: internalVL1 }
+          net2: { get_param: [nfv, CP, VDU1_CP1, network] }
+          # subnet1: { get_param: [nfv, CP, VDU1_CP0, fixed_ips, 0, subnet ]}
+          subnet2: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+          ip_address:
+            { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, ip_address] }
+          security_group: { get_param: security_group }
+
+outputs:
