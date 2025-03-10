@@ -1,6 +1,6 @@
 # VNFD package
 
-mostly unfinished
+!! not fully tested
 
 ## description
 
