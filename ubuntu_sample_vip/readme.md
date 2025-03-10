@@ -2,6 +2,10 @@
 
 !! not fully tested
 
+!! remember to change image information (name (must) and hash (not sure if required)) in the Definitions/vnfd*df*...yaml file
+
+or create image with the same name
+
 ## description
 
 ### flavor: simple
