@@ -1,7 +1,9 @@
 # openstack-vnfd
 
 VNF Packages for Tacker
+
 Devstack version 2024.2
+
 VNF LCM v2
 
 ## Current Target
