@@ -1,0 +1,80 @@
+{
+  "flavourId": "ha",
+  "instantiationLevelId": "instantiation_level_2",
+  "extVirtualLinks": [
+    {
+      "extCps": [
+        {
+          "cpdId": "VDU1_CP1",
+          "cpConfig": {
+            "VDU1_CP1": {
+              "cpProtocolData": [
+                {
+                  "layerProtocol": "IP_OVER_ETHERNET",
+                  "ipOverEthernet": {
+                    "ipAddresses": [
+                      {
+                        "subnetId": "f459857c-359f-478b-a96f-98862d61e806",
+                        "type": "IPV4",
+                        "numDynamicAddresses": 3
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "cpdId": "RT_extCP",
+          "cpConfig": {
+            "RT_extCP": {
+              "cpProtocolData": [
+                {
+                  "layerProtocol": "IP_OVER_ETHERNET",
+                  "ipOverEthernet": {
+                    "ipAddresses": [
+                      {
+                        "subnetId": "f459857c-359f-478b-a96f-98862d61e806",
+                        "type": "IPV4",
+                        "fixedAddresses": ["172.24.4.254"]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "cpdId": "VDU_extvCP",
+          "cpConfig": {
+            "VDU_extvCP": {
+              "cpProtocolData": [
+                {
+                  "layerProtocol": "IP_OVER_ETHERNET",
+                  "ipOverEthernet": {
+                    "ipAddresses": [
+                      {
+                        "subnetId": "f459857c-359f-478b-a96f-98862d61e806",
+                        "type": "IPV4",
+                        "fixedAddresses": ["172.24.4.40"]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "id": "public",
+      "resourceId": "8533fc5e-42dd-44ec-9100-ef79297f72e3"
+    }
+  ],
+  "additionalParams": {
+    "lcm-operation-user-data": "./UserData/lcm_user_data.py",
+    "lcm-operation-user-data-class": "DefaultUserData",
+    "security_group": "test_basic"
+  }
+}

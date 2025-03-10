@@ -1,0 +1,59 @@
+heat_template_version: rocky
+description: "Sample VDU HOT"
+
+parameters:
+  flavor:
+    type: string
+  image:
+    type: string
+  zone:
+    type: string
+  net1:
+    type: string
+  net2:
+    type: string
+  # subnet1:
+  #   type: string
+  subnet2:
+    type: string
+  ip_address:
+    type: string
+  security_group:
+    type: string
+
+resources:
+  VDU1:
+    type: OS::Nova::Server
+    properties:
+      flavor: { get_param: flavor }
+      name: VDU1
+      image: { get_param: image }
+      networks:
+        - port:
+            get_resource: VDU1_CP0
+        # instead of connecting directly to external network, we use internal network and use a floating IP
+        # - port:
+        #     get_resource: VDU1_CP1
+      availability_zone: { get_param: zone }
+      security_groups:
+        - { get_param: security_group }
+
+  # internal VL
+  VDU1_CP0:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: net1 }
+      allowed_address_pairs:
+        - ip_address: 192.168.0.10
+      security_groups: [{ get_param: security_group }]
+
+  # extVL with numDynamicAddresses and subnet
+  VDU1_CP1:
+    type: OS::Neutron::FloatingIP
+    depends_on: [VDU1_CP0]
+    properties:
+      # cannot have fixed ip address because this is scalable
+      # fixed_ip_address: 192.168.0.12
+      # floating_ip_address: { get_param: ip_address }
+      floating_network: { get_param: net2 }
+      port_id: { get_resource: VDU1_CP0 }

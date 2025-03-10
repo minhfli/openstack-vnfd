@@ -34,10 +34,10 @@ node_types:
         entry_schema:
           type: string
           # constraints: [ valid_values: [ Tacker ] ]
-        default: [ Tacker ]
+        default: [Tacker]
       flavour_id:
         type: string
-        constraints: [ valid_values: [ simple ] ]
+        constraints: [valid_values: [simple, ha]]
         default: simple
       flavour_description:
         type: string
@@ -48,4 +48,3 @@ node_types:
     interfaces:
       Vnflcm:
         type: tosca.interfaces.nfv.Vnflcm
-
