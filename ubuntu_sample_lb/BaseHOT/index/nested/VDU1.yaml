@@ -2,10 +2,6 @@ heat_template_version: rocky
 description: "Sample VDU HOT"
 
 parameters:
-  index:
-    type: string
-  name:
-    type: string
   flavor:
     type: string
   image:
@@ -31,7 +27,7 @@ resources:
     type: OS::Nova::Server
     properties:
       flavor: { get_param: flavor }
-      name: { get_param: name }
+      name: VDU1
       image: { get_param: image }
       networks:
         - port:

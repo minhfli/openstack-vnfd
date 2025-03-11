@@ -32,8 +32,6 @@ resources:
       resource:
         type: VDU1.yaml
         properties:
-          index: _%index%
-          name: VDU1_%index%
           flavor: { get_param: [nfv, VDU, VDU1, computeFlavourId] }
           image: { get_param: [nfv, VDU, VDU1, vcImageId] }
           zone: { get_param: [nfv, VDU, VDU1, locationConstraints] }
@@ -46,3 +44,12 @@ resources:
           security_group: { get_param: security_group }
 
 outputs:
+  vdu1_private_ip:
+    description: "Private IPs of VDU1"
+    value: { get_attr: [VDU1_scale_group, outputs, vdu1_private_ip] }
+  test1:
+    description: "Test1"
+    value: { get_attr: [VDU1_scale_group, outputs] }
+  test2:
+    description: "Test2"
+    value: { get_attr: [VDU1_scale_group, outputs_list] }
