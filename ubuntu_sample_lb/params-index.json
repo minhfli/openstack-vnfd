@@ -15,7 +15,7 @@
                   "ipOverEthernet": {
                     "ipAddresses": [
                       {
-                        "subnetId": "f4a181c0-c39a-466b-b61e-3c97360f96bc",
+                        "subnetId": "5dfd382b-34f0-4769-9c5e-7b711ee6cfb2",
                         "type": "IPV4",
                         "fixedAddresses": ["10.10.0.40"]
                       }
@@ -28,7 +28,7 @@
         }
       ],
       "id": "net0",
-      "resourceId": "998127d8-cd07-4ee4-8f60-f8ffe1b8353d"
+      "resourceId": "85cc6e58-e44b-47e1-8b29-2351b99fb31e" 
     }
   ],
   "additionalParams": {

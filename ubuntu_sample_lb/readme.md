@@ -14,13 +14,12 @@ the same as scale package
 
 ## 2 approach:
 
-### flavor: dynamic (currently working on)
+### flavor: index (currently working on)
 
-using heat template output to get fixed ips of the spawned instances
+1 scalable VDU as 1-3 instance, with name as the last part of their ips
+each connect to 2 network, internal and external  
 
-### flavor: inded
-
-using %index% on heat resource group for name and ip address
+return outputs of list of ips for future development
 
 ### flavor: fixed
 

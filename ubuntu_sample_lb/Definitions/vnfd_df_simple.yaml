@@ -64,30 +64,30 @@ topology_template:
           min_number_of_instances: 1
           max_number_of_instances: 3
         sw_image_data:
-          name: ubuntu-noble-apache
-          version: "24.04"
+          name: cirros-0.5.2-x86_64-disk
+          version: '0.5.2'
           checksum:
-            algorithm: sha-512
-            hash: cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e
+            algorithm: sha-256
+            hash: 932fcae93574e242dc3d772d5235061747dfe537668443a1f0567d893614b464
           container_format: bare
           disk_format: qcow2
-          min_disk: 5 GB
-          size: 5 GB
+          min_disk: 1 GB
+          size: 1 GB
       capabilities:
         virtual_compute:
           properties:
             requested_additional_capabilities:
               properties:
-                requested_additional_capability_name: f1.test
+                requested_additional_capability_name: m1.tiny
                 support_mandatory: true
                 target_performance_parameters:
                   entry_schema: test
             virtual_memory:
-              virtual_mem_size: 1024 MB
+              virtual_mem_size: 512 MB
             virtual_cpu:
               num_virtual_cpu: 1
             virtual_local_storage:
-              - size_of_storage: 5 GB
+              - size_of_storage: 1 GB
 
     VDU1_CP0:
       type: tosca.nodes.nfv.VduCp

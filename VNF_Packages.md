@@ -16,6 +16,8 @@ the BaseHOT yaml file's name doesnt matter, as long as there is one file yaml in
 
 It seems like %index% only work with OS::HEAT::ResourceGroup, not AutoScalingGroup
 
+In some place, I forgot to change heat template version, plese chang it to wallaby or the latest heat template version
+
 ## Param file
 
 LCM v2 and LCM v1 have different format, and different devstack version have different format too, especially for the extVirtualLinks part

@@ -1,4 +1,4 @@
-heat_template_version: 2013-05-23
+heat_template_version: wallaby
 description: "imple Base HOT for Sample VNF"
 
 parameters:

@@ -1,4 +1,4 @@
-heat_template_version: rocky
+heat_template_version: wallaby
 description: "Sample VDU HOT"
 
 parameters:
@@ -25,9 +25,16 @@ parameters:
 resources:
   VDU1:
     type: OS::Nova::Server
+    depends_on: [VDU1_CP0, VDU1_CP1, number]
     properties:
       flavor: { get_param: flavor }
-      name: VDU1
+      name:
+        str_replace:
+          template: VDU1-$last
+          params:
+            #  0   1   2   3
+            #[192,168,xxx,yyy]
+            $last: { get_attr: [number, value, 3] } 
       image: { get_param: image }
       networks:
         - port:
@@ -35,6 +42,14 @@ resources:
         - port:
             get_resource: VDU1_CP1
       availability_zone: { get_param: zone }
+  
+  number:
+    type: OS::Heat::Value
+    depends_on: [VDU1_CP0]
+    properties:
+      value:
+        # 192.168.xxx.yyy => [192,168,xxx,yyy]
+        str_split: ['.', { get_attr: [VDU1_CP0, fixed_ips, 0, ip_address] }]
 
   # internal VL
   VDU1_CP0:

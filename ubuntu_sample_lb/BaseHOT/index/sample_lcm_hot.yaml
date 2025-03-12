@@ -1,4 +1,4 @@
-heat_template_version: 2013-05-23
+heat_template_version: wallaby
 description: "imple Base HOT for Sample VNF"
 
 parameters:
@@ -44,12 +44,26 @@ resources:
           security_group: { get_param: security_group }
 
 outputs:
-  vdu1_private_ip:
-    description: "Private IPs of VDU1"
+
+  # this return a mapping map like this  {stack_id_1: private_ip_1, stack_id_2: private_ip_2, ...}
+  test0:
+    description: "test0"
     value: { get_attr: [VDU1_scale_group, outputs, vdu1_private_ip] }
-  test1:
-    description: "Test1"
-    value: { get_attr: [VDU1_scale_group, outputs] }
-  test2:
-    description: "Test2"
-    value: { get_attr: [VDU1_scale_group, outputs_list] }
+
+  # These 2 fail, I dont know why
+  # test1:
+  #   description: "Test1"
+  #   value: { get_attr: [VDU1_scale_group, outputs] }
+  # test2:
+  #   description: "Test2"
+  #   value: { get_attr: [VDU1_scale_group, outputs_list] }
+
+  # This return a list of private IPs like this [private_ip_1, private_ip_2, ...]
+  test5:
+    description: "Test5"
+    value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_private_ip] }  
+ 
+  # Please do not use this
+  # test6:
+  #   description: "Test6"
+  #   value: { get_attr: [VDU1_scale_group] }
