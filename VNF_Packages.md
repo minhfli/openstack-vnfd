@@ -16,3 +16,24 @@ the BaseHOT yaml file's name doesnt matter, as long as there is one file yaml in
 
 It seems like %index% only work with OS::HEAT::ResourceGroup, not AutoScalingGroup
 
+## Param file
+
+LCM v2 and LCM v1 have different format, and different devstack version have different format too, especially for the extVirtualLinks part
+
+The param format in this project is for VNF LCM v2, tacker version 2024.2
+
+remember to change the id of extVL or similar things in the param file
+
+## Error Management
+
+Package is CREATED, not ONBOARDED
+
+- check internet connection, tacker need internet to process VNF package
+- check descriptor id
+- check import of Definitions/ files
+- check constraints in vnfd_types file
+
+VNF instantiate fail
+
+- read occ description, it should explain the problem clearly
+- remember to rollback
