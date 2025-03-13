@@ -22,7 +22,7 @@ topology_template:
         flavour_id: { get_input: selected_flavour }
         # change d_id to something else when testing
         # descriptor_id: f1bb0ce7-ebca-4fa7-95ed-4840d70a1177
-        descriptor_id: fixed-0001-0000-0000-000000000000
+        descriptor_id: fixed-0002-0000-0000-000000000000
         provider: Company
         product_name: VNF Package for testing index
         software_version: "1.0"

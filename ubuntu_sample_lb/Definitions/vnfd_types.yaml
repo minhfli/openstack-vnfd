@@ -37,7 +37,7 @@ node_types:
         default: [Tacker]
       flavour_id:
         type: string
-        constraints: [valid_values: [simple, index, fixed]]
+        constraints: [valid_values: [simple, index, index2]]
         default: simple
       flavour_description:
         type: string

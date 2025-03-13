@@ -1,0 +1,75 @@
+heat_template_version: wallaby
+description: "Sample VDU HOT"
+
+parameters:
+  flavor:
+    type: string
+  image:
+    type: string
+  zone:
+    type: string
+  net1:
+    type: string
+  net2:
+    type: string
+  # subnet1:
+  #   type: string
+  subnet2:
+    type: string
+  ip_address:
+    type: string
+  security_group:
+    type: string
+    default: default
+
+resources:
+  VDU1:
+    type: OS::Nova::Server
+    depends_on: [VDU1_CP0, VDU1_CP1, number]
+    properties:
+      flavor: { get_param: flavor }
+      name:
+        str_replace:
+          template: VDU1-$last
+          params:
+            #  0   1   2   3
+            #[192,168,xxx,yyy]
+            $last: { get_attr: [number, value, 3] } 
+      image: { get_param: image }
+      networks:
+        - port:
+            get_resource: VDU1_CP0
+        - port:
+            get_resource: VDU1_CP1
+      availability_zone: { get_param: zone }
+  
+  number:
+    type: OS::Heat::Value
+    depends_on: [VDU1_CP0]
+    properties:
+      value:
+        # 192.168.xxx.yyy => [192,168,xxx,yyy]
+        str_split: ['.', { get_attr: [VDU1_CP0, fixed_ips, 0, ip_address] }]
+
+  # internal VL
+  VDU1_CP0:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: net1 }
+
+  # extVL with numDynamicAddresses and subnet
+  VDU1_CP1:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: net2 }
+      fixed_ips:
+        - subnet: { get_param: subnet2 }
+      # - ip_address: { get_param: ip_address }
+
+outputs:
+  vdu1_private_ip:
+    description: "Private IP of VDU1"
+    value: { get_attr: [VDU1_CP0, fixed_ips, 0, ip_address] }
+  vdu1_public_ip:
+    description: "Public IP of VDU1"
+    value: { get_attr: [VDU1_CP1, fixed_ips, 0, ip_address] }
