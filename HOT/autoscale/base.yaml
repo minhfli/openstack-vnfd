@@ -68,10 +68,10 @@ resources:
     properties:
       description: Scale up if CPU > 80%
       metric: cpu ## important    cpu, not cpu_util
-      aggregation_method: mean
+      aggregation_method: rate:mean
       granularity: 300
-      evaluation_periods: 1
-      threshold: 80
+      evaluation_periods: 3
+      threshold: 480000000000.0
       resource_type: instance
       comparison_operator: gt
       alarm_actions:
@@ -89,10 +89,10 @@ resources:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     properties:
       metric: cpu
-      aggregation_method: mean
+      aggregation_method: rate:mean
       granularity: 300
-      evaluation_periods: 1
-      threshold: 5
+      evaluation_periods: 3
+      threshold: 120000000000.0
       resource_type: instance
       comparison_operator: lt
       alarm_actions:
