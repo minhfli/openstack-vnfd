@@ -67,7 +67,7 @@ resources:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     properties:
       description: Scale up if CPU > 80%
-      metric: cpu_util
+      metric: cpu ## important    cpu, not cpu_util
       aggregation_method: mean
       granularity: 300
       evaluation_periods: 1
@@ -88,7 +88,7 @@ resources:
   cpu_alarm_low:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     properties:
-      metric: cpu_util
+      metric: cpu
       aggregation_method: mean
       granularity: 300
       evaluation_periods: 1
