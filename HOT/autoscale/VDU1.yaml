@@ -6,8 +6,8 @@ parameters:
     type: string
   image:
     type: string
-  zone:
-    type: string
+  # zone:
+  #   type: string
   net1:
     type: string
   net2:
@@ -39,7 +39,7 @@ resources:
             get_resource: VDU1_CP0
         - port:
             get_resource: VDU1_CP1
-      availability_zone: { get_param: zone }
+      # availability_zone: { get_param: zone }
   
   number:
     type: OS::Heat::Value
@@ -63,6 +63,12 @@ resources:
       fixed_ips:
         - subnet: { get_param: subnet2 }
       # - ip_address: { get_param: ip_address }
+  
+  VDU1_floatingIP:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: public
+      port_id: { get_resource: VDU1_CP1 }
 
 outputs:
   vdu1_private_ip:

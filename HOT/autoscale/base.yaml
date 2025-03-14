@@ -34,7 +34,7 @@ resources:
         properties:
           flavor: { get_param: [nfv, VDU, VDU1, flavor] }
           image: { get_param: [nfv, VDU, VDU1, image] }
-          zone: { get_param: [nfv, VDU, VDU1, zone] }
+          # zone: { get_param: [nfv, VDU, VDU1, zone] }
           net1: { get_resource: internalVL1 }
           net2: { get_param: [nfv, CP, VDU1_CP1, network] }
           # subnet1: { get_param: [nfv, CP, VDU1_CP0, fixed_ips, 0, subnet ]}
