@@ -9,6 +9,8 @@ parameters:
     default: default
   api_params:
     type: json
+  key_name:
+    type: string
 
 resources:
   internalVL1:
@@ -40,6 +42,10 @@ resources:
           # subnet1: { get_param: [nfv, CP, VDU1_CP0, fixed_ips, 0, subnet ]}
           subnet2: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
           security_group: { get_param: security_group }
+          key_name: { get_param: key_name }
+          metadata: {"metering.server_group": {get_param: "OS::stack_id"},
+                     "stack_id": {get_param: "OS::stack_id"},
+                     "stack_name": {get_param: "OS::stack_name"}}
   
   VDU1_scale_out:
     type: OS::Heat::ScalingPolicy

@@ -1,0 +1,32 @@
+{
+    "and": [
+        {
+            "or": [
+                {
+                    "=": {
+                        "created_by_project_id": "44b766757f13466cae72ceb7f4b459b6"
+                    }
+                },
+                {
+                    "and": [
+                        {
+                            "=": {
+                                "created_by_project_id": "029399ef80774e9b9eddc96cb12c13f0"
+                            }
+                        },
+                        {
+                            "=": {
+                                "project_id": "44b766757f13466cae72ceb7f4b459b6"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "=": {
+                "server_group": "e5ea03fd-18a7-4574-9f37-626d61e37104"
+            }
+        }
+    ]
+}

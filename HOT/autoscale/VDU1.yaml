@@ -19,6 +19,10 @@ parameters:
   security_group:
     type: string
     default: default
+  key_name:
+    type: string
+  metadata:
+    type: json
 
 resources:
   VDU1:
@@ -30,10 +34,10 @@ resources:
         str_replace:
           template: VDU1-$last
           params:
-            #  0   1   2   3
-            #[192,168,xxx,yyy]
-            $last: { get_attr: [number, value, 3] } 
+            $last: { get_attr: [number, value, 3] }    
       image: { get_param: image }
+      key_name: { get_param: key_name }
+      metadata: { get_param: metadata }
       networks:
         - port:
             get_resource: VDU1_CP0
@@ -54,6 +58,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network: { get_param: net1 }
+      security_groups: [{ get_param: security_group }]
 
   # extVL with numDynamicAddresses and subnet
   VDU1_CP1:
@@ -63,6 +68,7 @@ resources:
       fixed_ips:
         - subnet: { get_param: subnet2 }
       # - ip_address: { get_param: ip_address }
+      security_groups: [{ get_param: security_group }]
   
   VDU1_floatingIP:
     type: OS::Neutron::FloatingIP
