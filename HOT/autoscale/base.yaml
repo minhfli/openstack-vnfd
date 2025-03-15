@@ -11,6 +11,9 @@ parameters:
     type: json
   key_name:
     type: string
+  enable_auto_scaling:
+    type: boolean
+    default: true
 
 resources:
   internalVL1:
@@ -66,6 +69,7 @@ resources:
   cpu_alarm_high:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     properties:
+      enabled: { get_param: enable_auto_scaling }
       description: Scale up if CPU > 80%
       metric: cpu ## important    cpu, not cpu_util
       aggregation_method: rate:mean
@@ -88,6 +92,8 @@ resources:
   cpu_alarm_low:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     properties:
+      enabled: { get_param: enable_auto_scaling }
+      description: Scale down if CPU < 20%
       metric: cpu
       aggregation_method: rate:mean
       granularity: 300

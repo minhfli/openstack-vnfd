@@ -43,6 +43,11 @@ resources:
             get_resource: VDU1_CP0
         - port:
             get_resource: VDU1_CP1
+      user_data_format: RAW
+      user_data: |
+        #!/bin/bash
+        ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p' > /var/www/html/index.html
+        systemctl restart apache2
       # availability_zone: { get_param: zone }
   
   number:
