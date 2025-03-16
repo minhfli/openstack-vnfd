@@ -49,6 +49,7 @@ resources:
           metadata: {"metering.server_group": {get_param: "OS::stack_id"},
                      "stack_id": {get_param: "OS::stack_id"},
                      "stack_name": {get_param: "OS::stack_name"}}
+          root_stack_id: {get_param: "OS::stack_id"}
   
   VDU1_scale_out:
     type: OS::Heat::ScalingPolicy
@@ -115,7 +116,7 @@ resources:
 outputs:
   scale_group_private_ips:
     description: "Test5"
-    value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_private_ip] }  
+    value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_external_ip] }  
   
   VDU1_scale_out_signal_url:
     value: {get_attr: [VDU1_scale_out, signal_url]}
