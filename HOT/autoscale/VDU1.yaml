@@ -19,28 +19,38 @@ description: >
 parameters:
   flavor:
     type: string
+    default: m1.mini
   image:
     type: string
+    default: jammy-base
   # zone:
   #   type: string
   net1:
     type: string
+    default: ""
   net2:
     type: string
+    default: private
   # subnet1:
   #   type: string
   subnet2:
     type: string
+    default: private-subnet
   security_group:
     type: string
-    default: default
+    default: test-secgr
   key_name:
     type: string
+    default: minh
   metadata:
     type: json
+    default: {}
   root_stack_id:
     type: string
     default: ""
+  enable_auto_healing:
+    type: boolean
+    default: true
 
 conditions:
   is_standalone: {equals: [{get_param: root_stack_id}, ""]}
@@ -65,10 +75,16 @@ resources:
         - port:
             get_resource: VDU1_CP1
       user_data_format: RAW
-      user_data: |
-        #!/bin/bash
-        ip -o route get to 8.8.8.8 | sed -n 's/.*src \([0-9.]\+\).*/\1/p' > /var/www/html/index.html
-        systemctl restart apache2
+      user_data: # wait 5-10 minutes (after boot) for the server to be ready, if not, the server will return default apache2 page
+        str_replace: 
+          template: |
+            #!/bin/bash
+            echo "IP: $cp1 \n Floating: $fip" > /var/www/html/index.html &&
+            systemctl restart apache2 &&
+            exit 0
+          params:
+            $cp1: { get_attr: [VDU1_CP1, fixed_ips, 0, ip_address] }
+            $fip: { get_attr: [VDU1_floatingIP, floating_ip_address] }
       # availability_zone: { get_param: zone }
   
   number:
@@ -120,6 +136,7 @@ resources:
         #   op: eq
       alarm_queues:
        - {get_resource: alarm_queue}
+      enabled: {get_param: enable_auto_healing}
 
   error_event_alarm:
     type: OS::Aodh::EventAlarm
@@ -134,6 +151,7 @@ resources:
           op: eq
       alarm_queues:
        - {get_resource: alarm_queue}
+      enabled: {get_param: enable_auto_healing}
 
   deleted_event_alarm:
     type: OS::Aodh::EventAlarm
@@ -145,6 +163,7 @@ resources:
           op: eq
       alarm_queues:
        - {get_resource: alarm_queue}
+      enabled: {get_param: enable_auto_healing}
 
   # The Aodh event alarm does not take effect immediately; it may take up to
   # 60s (by default) for the event_alarm_cache_ttl to expire and the tenant's
