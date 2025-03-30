@@ -7,7 +7,6 @@ imports:
   - etsi_nfv_sol001_vnfd_types.yaml
   - vnfd_types.yaml
   - vnfd_df_simple.yaml
-  - vnfd_df_index.yaml
 
 topology_template:
   inputs:
@@ -22,9 +21,9 @@ topology_template:
         flavour_id: { get_input: selected_flavour }
         # change d_id to something else when testing
         # descriptor_id: f1bb0ce7-ebca-4fa7-95ed-4840d70a1177
-        descriptor_id: fixed-0002-0000-0000-000000000000
+        descriptor_id: suricata-0002-0000-0000-000000000000
         provider: Company
-        product_name: VNF Package for testing index
+        product_name: VNF Package for testing suricata
         software_version: "1.0"
         descriptor_version: "1.0"
         vnfm_info:

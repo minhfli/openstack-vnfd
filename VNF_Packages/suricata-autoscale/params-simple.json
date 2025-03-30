@@ -6,10 +6,18 @@
         "lcm-operation-user-data-class": "DefaultUserData",
         "security_group": "test-secgr",
         "key_name": "minh",
-        "enable_autoscale": false,
+        "enable_autoscale": true,
         "vdu1_cpu_threshold_hi": 210000000000.0,
         "vdu1_cpu_threshold_lo": 90000000000.0,
-        "vdu1_cpu_threshold": "vCPU x 1.000.000.000 x 300 x [0.1, 0.2, ...]"
+        "vdu1_cpu_threshold": "vCPU x 1.000.000.000 x 300 x [0.1, 0.2, ...]",
+        "vnf_instance_id": "a7cf1cc9-fdab-4bc9-8802-5ab08cec6c2a",
+        "ServerNotifierUri": "http://localhost:9990/server_notification",
+        "ServerNotifierFaultID": [
+            1234
+        ]
+    },
+    "vnfConfigurableProperties": {
+        "isAutohealEnabled": true
     },
     "extVirtualLinks": [
         {
@@ -24,7 +32,7 @@
                                     "ipOverEthernet": {
                                         "ipAddresses": [
                                             {
-                                                "subnetId": "f4a181c0-c39a-466b-b61e-3c97360f96bc",
+                                                "subnetId": "private-subnet",
                                                 "type": "IPV4",
                                                 "numDynamicAddresses": 2
                                             }
@@ -36,8 +44,8 @@
                     }
                 }
             ],
-            "id": "net0",
-            "resourceId": "998127d8-cd07-4ee4-8f60-f8ffe1b8353d"
+            "id": "private",
+            "resourceId": "private"
         }
     ]
 }

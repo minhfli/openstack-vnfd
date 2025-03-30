@@ -2,8 +2,9 @@
 
 .vscode/
 
-*rc.sh
 
 *.pub
 
 metrics/*/
+
+temp*

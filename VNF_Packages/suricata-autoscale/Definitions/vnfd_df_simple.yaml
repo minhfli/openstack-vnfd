@@ -41,19 +41,37 @@ topology_template:
       properties:
         flavour_description: A simple flavour
       requirements:
-
       interfaces:
         Vnflcm:
-          instantiate_start: []
-          instantiate_end: []
-          terminate_start: []
-          terminate_end: []
-          modify_information_start: []
-          modify_information_end: []
-          heal_start: []
-          heal_end: []
-          scale_start: []
-          scale_end: []
+          instantiate_start:
+            implementation: sample-script
+          instantiate_end:
+            implementation: sample-script
+          heal_start:
+            implementation: sample-script
+          heal_end:
+            implementation: sample-script
+          scale_start:
+            implementation: sample-script
+          scale_end:
+            implementation: sample-script
+          terminate_start:
+            implementation: sample-script
+          terminate_end:
+            implementation: sample-script
+          change_external_connectivity_start:
+            implementation: sample-script
+          modify_information_start:
+            implementation: sample-script
+          instantiate_rollback_start:
+            implementation: sample-script
+          scale_rollback_start:
+            implementation: sample-script
+      artifacts:
+        sample-script:
+          description: Sample script
+          type: tosca.artifacts.Implementation.Python
+          file: ../Scripts/server_notification.py
 
     VDU1:
       type: tosca.nodes.nfv.Vdu.Compute
@@ -65,15 +83,15 @@ topology_template:
           max_number_of_instances: 2
         sw_image_data:
           # here I used ubuntu 22.04 with suricata and apache2 installed
-          name: suricata-base 
+          name: suricata-base
           # all the information below are not used by tacker to instantiate vnf, but are required to successfully onboard the vnf package
           # IDK why
           # I think it is for VNF LCM v1, because it doesn't need BaseHOT folder
           # VNF LCM v2 use HEAT to deploy the VNF, only some properties are used and become parameters in the HOT
-          version: '0.5.2'
+          version: "1.0"
           checksum:
-            algorithm: sha-256
-            hash: 932fcae93574e242dc3d772d5235061747dfe537668443a1f0567d893614b464
+            algorithm: sha-512
+            hash: cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e
           container_format: bare
           disk_format: qcow2
           min_disk: 1 GB
@@ -87,14 +105,14 @@ topology_template:
                 support_mandatory: true
                 target_performance_parameters:
                   entry_schema: test
-            # these properties are not used too, but are required 
+            # these properties are not used too, but are required
             virtual_memory:
               virtual_mem_size: 512 MB
             virtual_cpu:
               num_virtual_cpu: 1
             virtual_local_storage:
               - size_of_storage: 6 GB
-    
+
     # VDU1_CP0 and internalVL1 are removed to make the VNF lighter
     # If you want to use them, see some other packages
 
@@ -169,4 +187,3 @@ topology_template:
             instantiation_level_2:
               number_of_instances: 2
         targets: [VDU1]
-

@@ -1,32 +1,137 @@
 {
-    "and": [
+    "flavourId": "simple",
+    "vnfState": "STARTED",
+    "scaleStatus": [
         {
-            "or": [
+            "aspectId": "VDU1_scale",
+            "scaleLevel": 0
+        }
+    ],
+    "maxScaleLevels": [
+        {
+            "aspectId": "VDU1_scale",
+            "scaleLevel": 1
+        }
+    ],
+    "extCpInfo": [
+        {
+            "id": "cp-e9332b8a-68a0-4ec9-952f-8716e0258c92",
+            "cpdId": "VDU1_CP1",
+            "cpConfigId": "VDU1_CP1",
+            "cpProtocolInfo": [
                 {
-                    "=": {
-                        "created_by_project_id": "44b766757f13466cae72ceb7f4b459b6"
+                    "layerProtocol": "IP_OVER_ETHERNET",
+                    "ipOverEthernet": {
+                        "ipAddresses": [
+                            {
+                                "type": "IPV4",
+                                "isDynamic": True,
+                                "subnetId": "private-subnet"
+                            }
+                        ]
                     }
-                },
+                }
+            ],
+            "extLinkPortId": "e9332b8a-68a0-4ec9-952f-8716e0258c92",
+            "associatedVnfcCpId": "VDU1_CP1-aa7938d7-f5c5-4521-8aaf-5f9cd6c187f0"
+        }
+    ],
+    "extVirtualLinkInfo": [
+        {
+            "id": "private",
+            "resourceHandle": {
+                "resourceId": "private"
+            },
+            "extLinkPorts": [
                 {
-                    "and": [
+                    "id": "e9332b8a-68a0-4ec9-952f-8716e0258c92",
+                    "resourceHandle": {
+                        "vimConnectionId": "default",
+                        "resourceId": "e9332b8a-68a0-4ec9-952f-8716e0258c92",
+                        "vimLevelResourceType": "OS: :Neutron: :Port"
+                    },
+                    "cpInstanceId": "cp-e9332b8a-68a0-4ec9-952f-8716e0258c92"
+                }
+            ],
+            "currentVnfExtCpData": [
+                {
+                    "cpdId": "VDU1_CP1",
+                    "cpConfig": {
+                        "VDU1_CP1": {
+                            "cpProtocolData": [
+                                {
+                                    "layerProtocol": "IP_OVER_ETHERNET",
+                                    "ipOverEthernet": {
+                                        "ipAddresses": [
+                                            {
+                                                "type": "IPV4",
+                                                "numDynamicAddresses": 2,
+                                                "subnetId": "private-subnet"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "vnfcResourceInfo": [
+        {
+            "id": "aa7938d7-f5c5-4521-8aaf-5f9cd6c187f0",
+            "vduId": "VDU1",
+            "computeResource": {
+                "vimConnectionId": "default",
+                "resourceId": "aa7938d7-f5c5-4521-8aaf-5f9cd6c187f0",
+                "vimLevelResourceType": "OS: :Nova: :Server"
+            },
+            "vnfcCpInfo": [
+                {
+                    "id": "VDU1_CP1-aa7938d7-f5c5-4521-8aaf-5f9cd6c187f0",
+                    "cpdId": "VDU1_CP1",
+                    "vnfExtCpId": "cp-e9332b8a-68a0-4ec9-952f-8716e0258c92"
+                }
+            ],
+            "metadata": {
+                "creation_time": "2025-03-30T08: 58: 05Z",
+                "stack_id": "vnf-c36ad630-32e6-4b10-b058-d8aec43490b2-VDU1_scale_group-urvk6hhmkzc4-tbrxobiq2hjv-2ctiwvps5uuv/5d1717d4-6413-4d51-8cb2-940811f77c73",
+                "parent_stack_id": "vnf-c36ad630-32e6-4b10-b058-d8aec43490b2-VDU1_scale_group-urvk6hhmkzc4/dbe33cb0-a7be-43be-90fd-903e3f0cc8be",
+                "parent_resource_name": "tbrxobiq2hjv",
+                "flavor": "m1.mini512"
+            }
+        }
+    ],
+    "vnfcInfo": [
+        {
+            "id": "VDU1-aa7938d7-f5c5-4521-8aaf-5f9cd6c187f0",
+            "vduId": "VDU1",
+            "vnfcResourceInfoId": "aa7938d7-f5c5-4521-8aaf-5f9cd6c187f0",
+            "vnfcState": "STARTED"
+        }
+    ],
+    "metadata": {
+        "stack_id": "4811b49f-a2d3-42b7-9063-a08f730b9db2",
+        "nfv": {
+            "VDU": {
+                "VDU1": {
+                    "desired_capacity": 1,
+                    "computeFlavourId": "m1.mini512",
+                    "vcImageId": "suricata-base"
+                }
+            },
+            "CP": {
+                "VDU1_CP1": {
+                    "network": "private",
+                    "fixed_ips": [
                         {
-                            "=": {
-                                "created_by_project_id": "029399ef80774e9b9eddc96cb12c13f0"
-                            }
-                        },
-                        {
-                            "=": {
-                                "project_id": "44b766757f13466cae72ceb7f4b459b6"
-                            }
+                            "subnet": "private-subnet"
                         }
                     ]
                 }
-            ]
-        },
-        {
-            "=": {
-                "server_group": "e5ea03fd-18a7-4574-9f37-626d61e37104"
             }
-        }
-    ]
+        },
+        "tenant": "demo"
+    }
 }

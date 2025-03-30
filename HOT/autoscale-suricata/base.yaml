@@ -1,66 +1,38 @@
 heat_template_version: wallaby
-description: "imple Base HOT for Sample VNF"
+description: >
+  Base HOT for Sample VNF
 
 parameters:
   nfv:
     type: json
-  security_group:
-    type: string
-    default: default
   api_params:
     type: json
-  key_name:
-    type: string
-    
-  enable_auto_scaling:
-    type: boolean
-    default: true
-  enable_auto_healing:
-    type: boolean
-    default: true
-
-  cpu_threshold_high:
-    type: number
-  cpu_threshold_low:
-    type: number
 
 resources:
-  internalVL1:
-    type: OS::Neutron::Net
-
-  internalVL1_subnet:
-    type: OS::Neutron::Subnet
-    depends_on: [internalVL1]
-    properties:
-      ip_version: 4
-      network:
-        get_resource: internalVL1
-      cidr: 192.168.0.0/24
-
   VDU1_scale_group:
     type: OS::Heat::AutoScalingGroup
     properties:
       min_size: 1
-      max_size: 3
+      max_size: 2
       desired_capacity: { get_param: [nfv, VDU, VDU1, desired_capacity] }
       resource:
         type: VDU1.yaml
         properties:
-          flavor: { get_param: [nfv, VDU, VDU1, flavor] }
-          image: { get_param: [nfv, VDU, VDU1, image] }
+          flavor: { get_param: [nfv, VDU, VDU1, computeFlavourId] }
+          image: { get_param: [nfv, VDU, VDU1, vcImageId] }
           # zone: { get_param: [nfv, VDU, VDU1, zone] }
-          net1: { get_resource: internalVL1 }
-          net2: { get_param: [nfv, CP, VDU1_CP1, network] }
-          # subnet1: { get_param: [nfv, CP, VDU1_CP0, fixed_ips, 0, subnet ]}
-          subnet2: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
-          security_group: { get_param: security_group }
-          key_name: { get_param: key_name }
-          metadata: {"metering.server_group": {get_param: "OS::stack_id"},
-                     "stack_id": {get_param: "OS::stack_id"},
-                     "stack_name": {get_param: "OS::stack_name"}}
-          root_stack_id: {get_param: "OS::stack_id"}
-          enable_auto_healing: { get_param: enable_auto_healing }
-  
+          net1: { get_param: [nfv, CP, VDU1_CP1, network] }
+          subnet1: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+          security_group: { get_param: [api_params, security_group] }
+          key_name: { get_param: [api_params, key_name] }
+          metadata:
+            {
+              "metering.server_group": { get_param: "OS::stack_id" },
+              "stack_id": { get_param: "OS::stack_id" },
+              "stack_name": { get_param: "OS::stack_name" },
+            }
+          root_stack_id: { get_param: "OS::stack_id" }
+
   VDU1_scale_out:
     type: OS::Heat::ScalingPolicy
     properties:
@@ -80,56 +52,117 @@ resources:
   cpu_alarm_high:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     properties:
-      enabled: { get_param: enable_auto_scaling }
-      description: Scale up if CPU > 80%
+      description: Scale up if CPU > threshold
       metric: cpu ## important    cpu, not cpu_util
       aggregation_method: rate:mean
       granularity: 300
       evaluation_periods: 3
-      threshold: 480000000000.0
+      threshold: { get_param: [api_params, vdu1_cpu_threshold_hi] }
       resource_type: instance
       comparison_operator: gt
+      # if we use this, alarm_state will not be updated when enable_autoscale is falses
+      # enabled: { get_param: [api_params, enable_autoscale] }
       alarm_actions:
-        - str_replace:
-            template: trust+url
-            params:
-              url: {get_attr: [VDU1_scale_out, signal_url]}
-      query:
+        if:
+          - { get_param: [api_params, enable_autoscale] }
+          - - str_replace:
+                template: trust+url
+                params:
+                  url: { get_attr: [VDU1_scale_out, signal_url] }
+      query: # this part is working
         str_replace:
           template: '{"=": {"server_group": "stack_id"}}'
           params:
-            stack_id: {get_param: "OS::stack_id"}
+            stack_id: { get_param: "OS::stack_id" }
 
   cpu_alarm_low:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     properties:
-      enabled: { get_param: enable_auto_scaling }
-      description: Scale down if CPU < 20%
+      description: Scale down if CPU < threshold
       metric: cpu
       aggregation_method: rate:mean
       granularity: 300
       evaluation_periods: 3
-      threshold: 120000000000.0
+      threshold: { get_param: [api_params, vdu1_cpu_threshold_lo] }
       resource_type: instance
       comparison_operator: lt
       alarm_actions:
-        - str_replace:
-            template: "trust+url"
-            params:
-              url: {get_attr: [VDU1_scale_in, signal_url]}
+        if:
+          - { get_param: [api_params, enable_autoscale] }
+          - - str_replace:
+                template: trust+url
+                params:
+                  url: { get_attr: [VDU1_scale_in, signal_url] }
       query:
         str_replace:
           template: '{"=": {"server_group": "stack_id"}}'
           params:
-            stack_id: {get_param: "OS::stack_id"}
+            stack_id: { get_param: "OS::stack_id" }
+
+  lb:
+    type: OS::Octavia::LoadBalancer
+    properties:
+      vip_subnet: { get_param: [nfv, CP, VDU1_CP1, network] }
+
+  listener:
+    type: OS::Octavia::Listener
+    properties:
+      loadbalancer: { get_resource: lb }
+      protocol: HTTP
+      protocol_port: 80
+  pool:
+    type: OS::Octavia::Pool
+    properties:
+      listener: { get_resource: listener }
+      lb_algorithm: ROUND_ROBIN
+      protocol: HTTP
+      session_persistence:
+        type: SOURCE_IP
+  lb_monitor:
+    type: OS::Octavia::HealthMonitor
+    properties:
+      pool: { get_resource: pool }
+      type: TCP
+      delay: 5
+      max_retries: 5
+      timeout: 5
+  # assign a floating ip address to the load balancer
+  # pool.
+  lb_floating:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: external_network_id }
+      port_id: { get_attr: [lb, vip_port_id] }
 
 outputs:
+  website_url:
+    value:
+      str_replace:
+        template: http://host/
+        params:
+          host: { get_attr: [lb_floating, floating_ip_address] }
+    description: >
+      This URL is the "external" URL that can be used to access the
+      Wordpress site.
+
+  vnf_stack_id:
+    description: "vnf stack id"
+    value: { get_param: "OS::stack_id" }
+
+  scale_group_instance_ids:
+    description: "instance ids of VDU1 scale group instances"
+    value: { get_attr: [VDU1_scale_group, outputs_list, instance_id] }
+
   scale_group_private_ips:
-    description: "Test5"
-    value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_external_ip] }  
-  
+    description: "private ips of VDU1 scale group instances"
+    value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_private_ip] }
+
+  scale_group_floating_ips:
+    description: "floating ips of VDU1 scale group instances"
+    value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_floating_ip] }
+
   VDU1_scale_out_signal_url:
-    value: {get_attr: [VDU1_scale_out, signal_url]}
+    value: { get_attr: [VDU1_scale_out, signal_url] }
 
   VDU1_scale_in_signal_url:
-    value: {get_attr: [VDU1_scale_in, signal_url]}
+    value: { get_attr: [VDU1_scale_in, signal_url] }
