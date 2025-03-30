@@ -32,6 +32,7 @@ resources:
               "stack_name": { get_param: "OS::stack_name" },
             }
           root_stack_id: { get_param: "OS::stack_id" }
+          lb_pool: { get_resource: pool }
 
   VDU1_scale_out:
     type: OS::Heat::ScalingPolicy
@@ -102,7 +103,7 @@ resources:
   lb:
     type: OS::Octavia::LoadBalancer
     properties:
-      vip_subnet: { get_param: [nfv, CP, VDU1_CP1, network] }
+      vip_subnet: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
 
   listener:
     type: OS::Octavia::Listener
@@ -131,7 +132,7 @@ resources:
   lb_floating:
     type: OS::Neutron::FloatingIP
     properties:
-      floating_network_id: { get_param: external_network_id }
+      floating_network_id: public
       port_id: { get_attr: [lb, vip_port_id] }
 
 outputs:

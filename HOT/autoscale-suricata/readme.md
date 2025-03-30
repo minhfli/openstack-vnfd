@@ -2,6 +2,14 @@
 
 an autoscaling group with autohealing instances
 
+# helpful commands
+
+```bash
+openstack stack create --enable-rollback  -t base.yaml -e env.yaml stack1
+# enable-rollback: if the stack creation fails, it will safely rollback
+
+```
+
 # target
 
 2 haproxy server MASTER and BACKUP, load-balancing apache2 servers  

@@ -84,7 +84,7 @@ resources:
   LB_member:
     type: OS::Octavia::PoolMember
     properties:
-      pool: { get_param: pool_id }
+      pool: { get_param: lb_pool }
       address: { get_attr: [VDU1_CP1, fixed_ips, 0, ip_address] }
       protocol_port: 80
       subnet: { get_param: subnet1 }
