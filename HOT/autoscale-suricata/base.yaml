@@ -117,9 +117,9 @@ resources:
       listener: { get_resource: listener }
       lb_algorithm: ROUND_ROBIN
       protocol: HTTP
-      # session_persistence:
-      #   type: SOURCE_IP
-      
+      # session_persistence: 
+      #   type: SOURCE_IP # will always return the same server for the same client
+
   lb_monitor:
     type: OS::Octavia::HealthMonitor
     properties:
