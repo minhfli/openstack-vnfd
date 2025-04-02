@@ -9,28 +9,23 @@ mkdir -p ./stack0
 
 while true; do
 
-    echo "logging memory usage for each server"
+    echo "Timestamp: $(date)"
+
     # logging ram usage for each server
-    echo "server1"
     openstack metric measures show --utc --resource-id $SERVER1 memory.usage >./stack0/server1_memory.log
-    echo "server2"
     openstack metric measures show --utc --resource-id $SERVER2 memory.usage >./stack0/server2_memory.log
 
     # openstack metric measures show --utc --resource-id "$SERVER1" cpu >./stack0/server1_cpu.log
     # openstack metric measures show --utc --resource-id "$SERVER2" cpu >./stack0/server2_cpu.log
 
-    echo "logging cpu usage for each server"
     # logging cpu usage for each server
-    echo "server1"
     openstack metric aggregates --resource-type instance \
         "(* ( / (aggregate rate:mean (metric cpu mean)) 300000000000.0) 100)" \
         "id=$SERVER1" >./stack0/server1_cpu_util_p.log
-    echo "server2"
     openstack metric aggregates --resource-type instance \
         "(* ( / (aggregate rate:mean (metric cpu mean)) 300000000000.0) 100)" \
         "id=$SERVER2" >./stack0/server2_cpu_util_p.log
 
-    echo "logging cpu usage for the stack"
     # logging cpu usage for the both
     openstack metric aggregates --resource-type instance \
         "(* ( / (aggregate rate:mean (metric cpu mean)) 300000000000.0) 100)" \
