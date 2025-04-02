@@ -30,6 +30,9 @@ parameters:
   root_stack_id:
     type: string
     default: ""
+  wc_notify: 
+    type: string
+    default: ""
 
 conditions:
   is_standalone: { equals: [{ get_param: root_stack_id }, ""] }
@@ -58,12 +61,14 @@ resources:
         str_replace:
           template: |
             #!/bin/bash
-            echo "IP: $cp1 \n Floating: $fip" > /var/www/html/index.html &&
-            systemctl restart apache2 &&
+            echo "IP: $cp1 ----- Floating: $fip" > /var/www/html/index.html 
+            systemctl restart apache2 
+            $wc_notify --data-binary '{"status": "SUCCESS"}' 
             exit 0
           params:
             $cp1: { get_attr: [VDU1_CP1, fixed_ips, 0, ip_address] }
             $fip: { get_attr: [VDU1_floatingIP, floating_ip_address] }
+            $wc_notify: { get_param: wc_notify }
       # availability_zone: { get_param: zone }
 
   number:
