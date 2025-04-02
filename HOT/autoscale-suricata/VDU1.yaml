@@ -48,6 +48,8 @@ resources:
       image: { get_param: image }
       key_name: { get_param: key_name }
       metadata: { get_param: metadata }
+      block_device_mapping_v2:
+        - delete_on_termination: true
       networks:
         - port:
             get_resource: VDU1_CP1
