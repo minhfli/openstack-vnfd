@@ -67,14 +67,24 @@ resources:
           template: |
             #!/bin/bash
             echo "IP: $cp1 ----- Floating: $fip" > /var/www/html/index.html 
+            echo "$wc_notify" > /var/www/html/wc_notify.txt
             systemctl restart apache2 
             $wc_notify --data-binary '{"status": "SUCCESS"}' 
             exit 0
           params:
             $cp1: { get_attr: [VDU1_CP1, fixed_ips, 0, ip_address] }
             $fip: { get_attr: [VDU1_floatingIP, floating_ip_address] }
-            $wc_notify: { get_param: wc_notify }
+            $wc_notify: { get_attr: [wc_notify_true_url, value] }
       # availability_zone: { get_param: zone }
+
+  wc_notify_true_url:
+    type: OS::Heat::Value
+    properties:
+      value:
+        str_replace:
+          template: { get_param: wc_notify }
+          params:
+            "0.0.0.0": "172.24.4.1"
 
   number:
     type: OS::Heat::Value

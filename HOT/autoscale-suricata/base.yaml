@@ -34,11 +34,7 @@ resources:
           root_stack_id: { get_param: "OS::stack_id" }
           lb_pool: { get_resource: pool }
           # wc_notify: { get_attr: ["wait_handle", "curl_cli"] }
-          wc_notify:
-            str_replace:
-              template: { get_attr: [wait_handle, curl_cli] }
-              params:
-                "0.0.0.0": "172.24.4.1"
+          wc_notify: { get_attr: [wait_handle, curl_cli] }
 
   VDU1_scale_out:
     type: OS::Heat::ScalingPolicy
