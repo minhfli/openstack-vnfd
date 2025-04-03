@@ -1,0 +1,32 @@
+heat_template_version: wallaby
+description: >
+  Base HOT for Sample VNF
+
+parameters:
+
+resources:
+  wait_for_instance: # wait for instance to be ready to start scaling alarm
+    type: OS::Heat::WaitCondition
+    properties:
+      handle: { get_resource: wait_handle }
+      timeout: 300
+
+  wait_handle:
+    type: OS::Heat::WaitConditionHandle
+
+outputs:
+  wc_notify:
+    description: >
+      This is the URL that the VDU1 instance will use to notify the
+      Heat stack when it is ready.
+    value: { get_attr: [wait_handle, curl_cli] }
+
+  wc_notify2:
+    description: >
+      This is the URL that the VDU1 instance will use to notify the
+      Heat stack when it is ready.
+    value:
+      str_replace:
+        template: { get_attr: [wait_handle, curl_cli] }
+        params:
+          "0.0.0.0": "172.24.4.1"

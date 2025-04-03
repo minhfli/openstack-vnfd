@@ -33,12 +33,18 @@ resources:
             }
           root_stack_id: { get_param: "OS::stack_id" }
           lb_pool: { get_resource: pool }
-          wc_notify: { get_attr: ['wait_handle', 'curl_cli'] }
+          # wc_notify: { get_attr: ["wait_handle", "curl_cli"] }
+          wc_notify:
+            str_replace:
+              template: { get_attr: [wait_handle, curl_cli] }
+              params:
+                "0.0.0.0": "172.24.4.1"
 
   VDU1_scale_out:
     type: OS::Heat::ScalingPolicy
     properties:
       scaling_adjustment: 1
+      cooldown: 1500
       auto_scaling_group_id:
         get_resource: VDU1_scale_group
       adjustment_type: change_in_capacity
@@ -47,6 +53,7 @@ resources:
     type: OS::Heat::ScalingPolicy
     properties:
       scaling_adjustment: -1
+      cooldown: 1500
       auto_scaling_group_id:
         get_resource: VDU1_scale_group
       adjustment_type: change_in_capacity
@@ -54,8 +61,8 @@ resources:
   wait_for_instance: # wait for instance to be ready to start scaling alarm
     type: OS::Heat::WaitCondition
     properties:
-      handle: {get_resource: wait_handle}
-      count: 1
+      handle: { get_resource: wait_handle }
+      count: { get_param: [nfv, VDU, VDU1, desired_capacity] }
       timeout: 3600
 
   wait_handle:
@@ -63,7 +70,7 @@ resources:
 
   cpu_alarm_high:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
-    depends_on: 
+    depends_on:
       - wait_for_instance
     properties:
       description: Scale up if CPU > threshold
@@ -91,7 +98,7 @@ resources:
 
   cpu_alarm_low:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
-    depends_on: 
+    depends_on:
       - wait_for_instance
     properties:
       description: Scale down if CPU < threshold
@@ -132,7 +139,7 @@ resources:
       listener: { get_resource: listener }
       lb_algorithm: ROUND_ROBIN
       protocol: HTTP
-      # session_persistence: 
+      # session_persistence:
       #   type: SOURCE_IP # will always return the same server for the same client
 
   lb_monitor:
