@@ -7,16 +7,14 @@ parameters:
     default: u.mini.512M
   image:
     type: string
-    default: jammy-base
+    default: e2a38f0b-b4eb-4bde-a0d7-2bdc339ad905
 
   net1:
     type: string
-    default: private
+    default: heat-net
   subnet1:
     type: string
-    default: private-subnet
-  lb_pool:
-    type: string
+    default: heat-subnet
 
   security_group:
     type: string
@@ -66,12 +64,10 @@ resources:
             printf "---- LOGGING ----\n" >> /var/www/html/log.txt
 
             wc_notify_var="$wc_notify"
-
             printf "\n------------------\n" >> /var/www/html/log.txt
             printf "$wc_notify_var" >> /var/www/html/log.txt
 
             notify_cli="${wc_notify_var//0.0.0.0/172.24.4.1} --data-binary '{\"status\": \"SUCCESS\"}'"
-
             printf "\n------------------\n" >> /var/www/html/log.txt
             printf "$notify_cli" >> /var/www/html/log.txt
 
@@ -88,7 +84,7 @@ resources:
             $wc_notify: { get_attr: [wait_handle, curl_cli] }
       # availability_zone: { get_param: zone }
 
-  wait_for_instance: # delay stack operation until instance is ready
+  wait_for_instance: # wait for instance to be ready, stack will stay in IN_PROGRESS state until the instance done executing user_data
     type: OS::Heat::WaitCondition
     properties:
       handle: { get_resource: wait_handle }
@@ -113,14 +109,6 @@ resources:
         - subnet: { get_param: subnet1 }
       security_groups: [{ get_param: security_group }]
 
-  LB_member:
-    type: OS::Octavia::PoolMember
-    properties:
-      pool: { get_param: lb_pool }
-      address: { get_attr: [VDU1_CP1, fixed_ips, 0, ip_address] }
-      protocol_port: 80
-      subnet: { get_param: subnet1 }
-
   # Floating IP, remove this when deploying in a public cloud
   VDU1_floatingIP:
     type: OS::Neutron::FloatingIP
@@ -129,9 +117,6 @@ resources:
       port_id: { get_resource: VDU1_CP1 }
 
 outputs:
-  lb_member:
-    description: LB member details.
-    value: { get_attr: [LB_member, show] }
   instance_id:
     description: "ID of VDU1"
     value: { get_resource: VDU1 }
