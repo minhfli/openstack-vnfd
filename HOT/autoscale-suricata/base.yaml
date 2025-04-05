@@ -33,8 +33,6 @@ resources:
             }
           root_stack_id: { get_param: "OS::stack_id" }
           lb_pool: { get_resource: pool }
-          # wc_notify: { get_attr: ["wait_handle", "curl_cli"] }
-          wc_notify: { get_attr: [wait_handle, curl_cli] }
 
   VDU1_scale_out:
     type: OS::Heat::ScalingPolicy
@@ -54,20 +52,10 @@ resources:
         get_resource: VDU1_scale_group
       adjustment_type: change_in_capacity
 
-  wait_for_instance: # wait for instance to be ready to start scaling alarm
-    type: OS::Heat::WaitCondition
-    properties:
-      handle: { get_resource: wait_handle }
-      count: { get_param: [nfv, VDU, VDU1, desired_capacity] }
-      timeout: 3600
-
-  wait_handle:
-    type: OS::Heat::WaitConditionHandle
-
   cpu_alarm_high:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     depends_on:
-      - wait_for_instance
+      - VDU1_scale_out
     properties:
       description: Scale up if CPU > threshold
       metric: cpu ## important    cpu, not cpu_util
@@ -95,7 +83,7 @@ resources:
   cpu_alarm_low:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     depends_on:
-      - wait_for_instance
+      - VDU1_scale_in
     properties:
       description: Scale down if CPU < threshold
       metric: cpu
@@ -146,8 +134,7 @@ resources:
       delay: 5
       max_retries: 5
       timeout: 5
-  # assign a floating ip address to the load balancer
-  # pool.
+
   lb_floating:
     type: OS::Neutron::FloatingIP
     properties:
