@@ -37,7 +37,7 @@ conditions:
 resources:
   VDU1:
     type: OS::Nova::Server
-    depends_on: [VDU1_CP1, number]
+    depends_on: [VDU1_CP1, number, LB_member] # delete pool member before deleting server
     properties:
       flavor: { get_param: flavor }
       name:
