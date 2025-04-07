@@ -1,0 +1,19 @@
+parameters: # many were changed for compatibility with tacker params.json
+  nfv:
+    VDU:
+      VDU1:
+        vcImageId: e2a38f0b-b4eb-4bde-a0d7-2bdc339ad905 # volume snapshot
+        computeFlavourId: u.mini.1G # 1 vCPU, 1GB RAM
+        desired_capacity: 1 # start at
+    CP:
+      VDU1_CP1:
+        network: heat-net
+        fixed_ips:
+          - subnet: heat-subnet
+
+  api_params:
+    security_group: test-secgr
+    key_name: minh
+    enable_autoscale: false
+    vdu1_cpu_threshold_hi: 210000000000.0
+    vdu1_cpu_threshold_lo: 90000000000.0

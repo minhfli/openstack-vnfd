@@ -1,4 +1,0 @@
-nfv:
-  VDU:
-    VDU1:
-      desired_capacity: 2 # start at 1, scale to 2``
