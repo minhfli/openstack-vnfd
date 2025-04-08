@@ -2,6 +2,10 @@
 
 an autoscaling group with autohealing instances
 
+One autoscaling group with 2 instances, and a load balancer
+
+you can also vertical scale them, by disable autoscaling, changing the flavor and stack update
+
 # helpful commands
 
 ```bash
@@ -13,20 +17,12 @@ openstack stack create --enable-rollback  -t base.yaml -e env.yaml stack1
 # resource placed under updated: (not will) can be updated
 # resource placed under unchanged: will not be changed
 
-openstack stack update --parameter nfv.VDU.VDU1.desired_capacity=1 -e env1.yaml --existing --dry-run stack0 \
+openstack stack update -e env1.yaml --existing --dry-run stack0 \
 | grep -e added -e deleted -e replaced -e unchanged -e updated -e resource_type -e "| ]" -e + \
 > ./temp/test_update
 
-openstack stack update --parameter nfv.VDU.VDU1.desired_capacity=1 -e env1.yaml --existing stack0 > ./temp/test_update
+openstack stack update -e env1.yaml --existing stack0 > ./temp/test_update
 ```
-
-# target
-
-2 haproxy server MASTER and BACKUP, load-balancing apache2 servers
-
-VIP for ha servers, setup high availability for ha servers
-
-1 autoscaling group with autohealing apache2 servers
 
 # prepare
 
