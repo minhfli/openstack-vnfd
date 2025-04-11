@@ -3,7 +3,9 @@ description: >
   Base HOT for Sample VNF
 
 parameters:
-  nfv:
+  P-VDU1:
+    type: json
+  P-VDU1_CP1:
     type: json
   scaling:
     type: json
@@ -11,16 +13,15 @@ parameters:
 resources:
   VDU1:
     type: OS::Nova::Server
-    depends_on: [VDU1_CP1]
     properties:
-      flavor: { get_param: [nfv, VDU, VDU1, computeFlavourId] }
+      flavor: { get_param: [P-VDU1, computeFlavourId] }
       name: VDU1
-      key_name: { get_param: [nfv, VDU, VDU1, key_name] }
+      key_name: { get_param: [P-VDU1, key_name] }
       # metadata: { get_param: metadata }
       block_device_mapping:
         - delete_on_termination: true
           device_name: vda
-          snapshot_id: { get_param: [nfv, VDU, VDU1, vcImageId] }
+          snapshot_id: { get_param: [P-VDU1, vcImageId] }
       networks:
         - port:
             get_resource: VDU1_CP1
@@ -40,11 +41,11 @@ resources:
   VDU1_CP1:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: [nfv, CP, VDU1_CP1, network] }
+      network: { get_param: [P-VDU1_CP1, network] }
       fixed_ips:
-        - subnet: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+        - subnet: { get_param: [P-VDU1_CP1, fixed_ips, 0, subnet] }
           # ip_address: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, ip_address] }
-      security_groups: [{ get_param: [nfv, CP, VDU1_CP1, security_group] }]
+      security_groups: [{ get_param: [P-VDU1_CP1, security_group] }]
 
   # Floating IP, remove this when deploying in a public cloud
   VDU1_floatingIP:

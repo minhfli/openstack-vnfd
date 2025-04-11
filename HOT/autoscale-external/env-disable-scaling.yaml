@@ -13,7 +13,7 @@ parameters: # many were changed for compatibility with tacker params.json
     security_group: test-secgr
 
   scaling:
-    enable_autoscale: true
+    enable_autoscale: false
     vdu1_cpu_threshold_hi: 210000000000.0
     vdu1_cpu_threshold_lo: 90000000000.0
     alarm_post_url: http://0.0.0.0:8080 # for alarm notification
