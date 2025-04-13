@@ -7,14 +7,17 @@ parameters:
     type: json
   P-VDU1_CP1:
     type: json
-  scaling:
+  VDU1-scaling:
+    type: json
+  VDU1-scale-level:
     type: json
 
 resources:
   VDU1:
     type: OS::Nova::Server
     properties:
-      flavor: { get_param: [P-VDU1, computeFlavourId] }
+      # flavor: { get_param: [P-VDU1, computeFlavourId] }
+      flavor: { get_resource: flavor }
       name: VDU1
       key_name: { get_param: [P-VDU1, key_name] }
       # metadata: { get_param: metadata }
@@ -54,6 +57,13 @@ resources:
       floating_network: public
       port_id: { get_resource: VDU1_CP1 }
 
+  flavor:
+    type: OS::Nova::Flavor
+    properties:
+      is_public: false
+      ram: { get_param: [VDU1-scale-level, ram] }
+      vcpus: { get_param: [VDU1-scale-level, vcpu] }
+
   cpu_alarm_high:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
     properties:
@@ -62,16 +72,16 @@ resources:
       aggregation_method: rate:mean
       granularity: 300
       evaluation_periods: 2
-      threshold: { get_param: [scaling, vdu1_cpu_threshold_hi] }
+      threshold: { get_param: [VDU1-scale-level, cpu_threshold_hi] }
       resource_type: instance
       comparison_operator: gt
       alarm_actions:
         if:
-          - { get_param: [scaling, enable_autoscale] }
+          - { get_param: [VDU1-scaling, enable_autoscale] }
           - - str_replace:
                 template: trust+url/heat/$stack_id/scale_out
                 params:
-                  url: { get_param: [scaling, alarm_post_url] }
+                  url: { get_param: [VDU1-scaling, alarm_post_url] }
                   $stack_id: { get_param: "OS::stack_id" }
       query:
         str_replace:
@@ -87,16 +97,16 @@ resources:
       aggregation_method: rate:mean
       granularity: 300
       evaluation_periods: 2
-      threshold: { get_param: [scaling, vdu1_cpu_threshold_lo] }
+      threshold: { get_param: [VDU1-scale-level, cpu_threshold_lo] }
       resource_type: instance
       comparison_operator: lt
       alarm_actions:
         if:
-          - { get_param: [scaling, enable_autoscale] }
+          - { get_param: [VDU1-scaling, enable_autoscale] }
           - - str_replace:
                 template: trust+url/heat/$stack_id/scale_in
                 params:
-                  url: { get_param: [scaling, alarm_post_url] }
+                  url: { get_param: [VDU1-scaling, alarm_post_url] }
                   $stack_id: { get_param: "OS::stack_id" }
       query:
         str_replace:
