@@ -1,0 +1,205 @@
+heat_template_version: wallaby
+description: >
+  Base HOT for Sample VNF
+
+parameters:
+  nfv:
+    type: json
+
+  VDU1-scaling:
+    type: json
+
+  VDU1-scale-level:
+    type: number
+
+resources:
+  VDU1_scale_group:
+    type: OS::Heat::AutoScalingGroup
+    properties:
+      min_size: 1
+      max_size: 3
+      desired_capacity:
+        { get_param: [VDU1-scaling, scale-levels, VDU1-scale-level, count] }
+      resource:
+        type: VDU1.yaml
+        properties:
+          flavor: { get_resource: VDU1_flavor }
+          image: { get_param: [nfv, VDU, VDU1, vcImageId] }
+          net1: { get_param: [nfv, CP, VDU1_CP1, network] }
+          subnet1: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+          security_group: { get_param: [nfv, CP, VDU1_CP1, security_group] }
+          key_name: { get_param: [nfv, VDU, VDU1, key_name] }
+          metadata:
+            {
+              "metering.server_group": { get_resource: VDU1_server_group },
+              "stack_id": { get_param: "OS::stack_id" },
+              "stack_name": { get_param: "OS::stack_name" },
+            }
+          server_group: { get_resource: VDU1_server_group }
+          root_stack_id: { get_param: "OS::stack_id" }
+          lb_pool: { get_resource: pool }
+
+  VDU1_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      ram: { get_param: [VDU1-scaling, scale-levels, VDU1-scale-level, ram] }
+      vcpus: { get_param: [VDU1-scaling, scale-levels, VDU1-scale-level, vcpu] }
+
+  VDU1_server_group:
+    type: OS::Nova::ServerGroup
+    properties:
+      policies: [“soft-anti-affinity”]
+      # affinity              all VMs on the same node
+      # anti affinity         each VM on a different node
+      # soft affinity         VMs on the same host if possible
+      # soft anti-affinity    VMs on separate hosts if possible
+
+  VDU1_scale_out:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      scaling_adjustment: 1
+      cooldown: 1500
+      auto_scaling_group_id:
+        get_resource: VDU1_scale_group
+      adjustment_type: change_in_capacity
+
+  VDU1_scale_in:
+    type: OS::Heat::ScalingPolicy
+    properties:
+      scaling_adjustment: -1
+      cooldown: 1500
+      auto_scaling_group_id:
+        get_resource: VDU1_scale_group
+      adjustment_type: change_in_capacity
+
+  cpu_alarm_high:
+    type: OS::Aodh::GnocchiAggregationByResourcesAlarm
+    depends_on:
+      - VDU1_scale_out
+    properties:
+      description: Scale up if CPU > threshold
+      metric: cpu ## important    cpu, not cpu_util
+      aggregation_method: rate:mean
+      granularity: 300
+      evaluation_periods: 2
+      threshold:
+        {
+          get_param:
+            [VDU1-scaling, scale-levels, VDU1-scale-level, cpu_threshold_hi],
+        }
+      resource_type: instance
+      comparison_operator: gt
+      # if we use this, alarm_state will not be updated when enable_autoscale is falses
+      # enabled: { get_param: [api_params, enable_autoscale] }
+      alarm_actions:
+        if:
+          - { get_param: [VDU1-scaling, enable_autoscale] }
+          - - str_replace:
+                template: trust+url/stack_id/VDU1/SCALE_OUT
+                params:
+                  url: { get_param: [VDU1-scaling, alarm_post_url] }
+                  stack_id: { get_param: "OS::stack_id" }
+      query: # this part is working
+        str_replace:
+          template: '{"=": {"server_group": "server_group"}}'
+          params:
+            server_group: { get_resource:: VDU1_server_group }
+
+  cpu_alarm_low:
+    type: OS::Aodh::GnocchiAggregationByResourcesAlarm
+    depends_on:
+      - VDU1_scale_in
+    properties:
+      description: Scale down if CPU < threshold
+      metric: cpu
+      aggregation_method: rate:mean
+      granularity: 300
+      evaluation_periods: 2
+      threshold:
+        {
+          get_param:
+            [VDU1-scaling, scale-levels, VDU1-scale-level, cpu_threshold_lo],
+        }
+      resource_type: instance
+      comparison_operator: lt
+      alarm_actions:
+        if:
+          - { get_param: [VDU1-scaling, enable_autoscale] }
+          - - str_replace:
+                template: trust+url/stack_id/VDU1/SCALE_IN
+                params:
+                  url: { get_param: [VDU1-scaling, alarm_post_url] }
+                  stack_id: { get_param: "OS::stack_id" }
+      query:
+        str_replace:
+          template: '{"=": {"server_group": "server_group"}}'
+          params:
+            server_group: { get_resource:: VDU1_server_group }
+
+  lb:
+    type: OS::Octavia::LoadBalancer
+    properties:
+      vip_subnet: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+
+  listener:
+    type: OS::Octavia::Listener
+    properties:
+      loadbalancer: { get_resource: lb }
+      protocol: HTTP
+      protocol_port: 80
+  pool:
+    type: OS::Octavia::Pool
+    properties:
+      listener: { get_resource: listener }
+      lb_algorithm: ROUND_ROBIN
+      protocol: HTTP
+      # session_persistence:
+      #   type: SOURCE_IP # will always return the same server for the same client
+
+  lb_monitor:
+    type: OS::Octavia::HealthMonitor
+    properties:
+      pool: { get_resource: pool }
+      type: TCP
+      delay: 5
+      max_retries: 5
+      timeout: 5
+
+  lb_floating:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: public
+      port_id: { get_attr: [lb, vip_port_id] }
+
+outputs:
+  website_url:
+    value:
+      str_replace:
+        template: http://host/
+        params:
+          host: { get_attr: [lb_floating, floating_ip_address] }
+    description: >
+      This URL is the "external" URL that can be used to access the
+      Wordpress site.
+
+  vnf_stack_id:
+    description: "vnf stack id"
+    value: { get_param: "OS::stack_id" }
+
+  scale_group_instance_ids:
+    description: "instance ids of VDU1 scale group instances"
+    value: { get_attr: [VDU1_scale_group, outputs_list, instance_id] }
+
+  scale_group_private_ips:
+    description: "private ips of VDU1 scale group instances"
+    value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_private_ip] }
+
+  scale_group_floating_ips:
+    description: "floating ips of VDU1 scale group instances"
+    value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_floating_ip] }
+
+  VDU1_scale_out_signal_url:
+    value: { get_attr: [VDU1_scale_out, signal_url] }
+
+  VDU1_scale_in_signal_url:
+    value: { get_attr: [VDU1_scale_in, signal_url] }
