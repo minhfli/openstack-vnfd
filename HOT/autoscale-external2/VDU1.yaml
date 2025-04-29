@@ -74,6 +74,9 @@ resources:
             printf "\n------------------\n" >> /var/www/html/log.txt
             printf "$notify_cli" >> /var/www/html/log.txt
             systemctl restart apache2 
+
+            apt update
+            apt upgrade -y
             # sleep to stablize cpu usage
             sleep 60
             eval "$notify_cli" 
