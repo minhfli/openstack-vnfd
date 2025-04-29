@@ -19,7 +19,15 @@ resources:
       min_size: 1
       max_size: 3
       desired_capacity:
-        { get_param: [VDU1-scaling, scale-levels, VDU1-scale-level, count] }
+        {
+          get_param:
+            [
+              VDU1-scaling,
+              scale-levels,
+              { get_param: VDU1-scale-level },
+              count,
+            ],
+        }
       resource:
         type: VDU1.yaml
         properties:
@@ -42,13 +50,21 @@ resources:
   VDU1_flavor:
     type: OS::Nova::Flavor
     properties:
-      ram: { get_param: [VDU1-scaling, scale-levels, VDU1-scale-level, ram] }
-      vcpus: { get_param: [VDU1-scaling, scale-levels, VDU1-scale-level, vcpu] }
+      ram:
+        {
+          get_param:
+            [VDU1-scaling, scale-levels, { get_param: VDU1-scale-level }, ram],
+        }
+      vcpus:
+        {
+          get_param:
+            [VDU1-scaling, scale-levels, { get_param: VDU1-scale-level }, vcpu],
+        }
 
   VDU1_server_group:
     type: OS::Nova::ServerGroup
     properties:
-      policies: [“soft-anti-affinity”]
+      policies: [soft-anti-affinity]
       # affinity              all VMs on the same node
       # anti affinity         each VM on a different node
       # soft affinity         VMs on the same host if possible
@@ -85,7 +101,12 @@ resources:
       threshold:
         {
           get_param:
-            [VDU1-scaling, scale-levels, VDU1-scale-level, cpu_threshold_hi],
+            [
+              VDU1-scaling,
+              scale-levels,
+              { get_param: VDU1-scale-level },
+              cpu_threshold_hi,
+            ],
         }
       resource_type: instance
       comparison_operator: gt
@@ -118,7 +139,12 @@ resources:
       threshold:
         {
           get_param:
-            [VDU1-scaling, scale-levels, VDU1-scale-level, cpu_threshold_lo],
+            [
+              VDU1-scaling,
+              scale-levels,
+              { get_param: VDU1-scale-level },
+              cpu_threshold_lo,
+            ],
         }
       resource_type: instance
       comparison_operator: lt
