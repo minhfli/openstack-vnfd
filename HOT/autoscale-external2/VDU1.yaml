@@ -129,6 +129,13 @@ resources:
       floating_network: public
       port_id: { get_resource: VDU1_CP1 }
 
+  VDU1_wait: # wait for VDU1 to be ready
+    type: OS::Heat::TestResource
+    properties:
+      action_wait_secs:
+        update: 600
+      value: { get_resource: VDU1 }
+
 outputs:
   lb_member:
     description: LB member details.
