@@ -1,0 +1,11 @@
+0 th iteration
+Update started at: 1746003753
+Monitoring instance at http://172.24.4.127... - scale level = 0
+Instance went DOWN at: 1746003764
+Instance came UP at: 1746003960
+Reboot time: 196 seconds
+Total time: 207 seconds
+1 th iteration
+Update started at: 1746004035
+Monitoring instance at http://172.24.4.127... - scale level = 1
+Instance went DOWN at: 1746004048

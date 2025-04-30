@@ -57,6 +57,7 @@ resources:
     properties:
       floating_network: public
       port_id: { get_resource: VDU1_CP1 }
+      floating_ip_address: { get_param: [nfv, CP, VDU1_CP1, floating_ip] }
 
   VDU1_flavor:
     type: OS::Nova::Flavor
