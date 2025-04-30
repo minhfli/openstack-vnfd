@@ -1,11 +1,211 @@
+
 0 th iteration
-Update started at: 1746003753
+Update started at: 1746027112
 Monitoring instance at http://172.24.4.127... - scale level = 0
-Instance went DOWN at: 1746003764
-Instance came UP at: 1746003960
-Reboot time: 196 seconds
-Total time: 207 seconds
+Instance went DOWN at: 1746027124
+Instance came UP at: 1746027283
+Reboot time: 159 seconds
+Total time: 171 seconds
 1 th iteration
-Update started at: 1746004035
+Update started at: 1746027320
 Monitoring instance at http://172.24.4.127... - scale level = 1
-Instance went DOWN at: 1746004048
+Instance went DOWN at: 1746027330
+Instance came UP at: 1746027456
+Reboot time: 126 seconds
+Total time: 136 seconds
+2 th iteration
+Update started at: 1746027496
+Monitoring instance at http://172.24.4.127... - scale level = 2
+Instance went DOWN at: 1746027509
+Instance came UP at: 1746027624
+Reboot time: 115 seconds
+Total time: 128 seconds
+3 th iteration
+Update started at: 1746027666
+Monitoring instance at http://172.24.4.127... - scale level = 3
+Instance went DOWN at: 1746027680
+Instance came UP at: 1746027845
+Reboot time: 165 seconds
+Total time: 179 seconds
+4 th iteration
+Update started at: 1746027883
+Monitoring instance at http://172.24.4.127... - scale level = 4
+Instance went DOWN at: 1746027894
+Instance came UP at: 1746028021
+Reboot time: 127 seconds
+Total time: 138 seconds
+5 th iteration
+Update started at: 1746028063
+Monitoring instance at http://172.24.4.127... - scale level = 5
+Instance went DOWN at: 1746028075
+Instance came UP at: 1746028197
+Reboot time: 122 seconds
+Total time: 134 seconds
+6 th iteration
+Update started at: 1746028236
+Monitoring instance at http://172.24.4.127... - scale level = 6
+Instance went DOWN at: 1746028249
+Instance came UP at: 1746028371
+Reboot time: 122 seconds
+Total time: 135 seconds
+7 th iteration
+Update started at: 1746028410
+Monitoring instance at http://172.24.4.127... - scale level = 7
+Instance went DOWN at: 1746028422
+Instance came UP at: 1746028557
+Reboot time: 135 seconds
+Total time: 147 seconds
+8 th iteration
+Update started at: 1746028597
+Monitoring instance at http://172.24.4.127... - scale level = 8
+Instance went DOWN at: 1746028608
+Instance came UP at: 1746028731
+Reboot time: 123 seconds
+Total time: 134 seconds
+9 th iteration
+Update started at: 1746028771
+Monitoring instance at http://172.24.4.127... - scale level = 9
+Instance went DOWN at: 1746028782
+Instance came UP at: 1746028898
+Reboot time: 116 seconds
+Total time: 127 seconds
+10 th iteration
+Update started at: 1746028938
+Monitoring instance at http://172.24.4.127... - scale level = 0
+Instance went DOWN at: 1746028948
+Instance came UP at: 1746029108
+Reboot time: 160 seconds
+Total time: 170 seconds
+11 th iteration
+Update started at: 1746029145
+Monitoring instance at http://172.24.4.127... - scale level = 1
+Instance went DOWN at: 1746029155
+Instance came UP at: 1746029281
+Reboot time: 126 seconds
+Total time: 136 seconds
+12 th iteration
+Update started at: 1746029320
+Monitoring instance at http://172.24.4.127... - scale level = 2
+Instance went DOWN at: 1746029330
+Instance came UP at: 1746029449
+Reboot time: 119 seconds
+Total time: 129 seconds
+13 th iteration
+Update started at: 1746029488
+Monitoring instance at http://172.24.4.127... - scale level = 3
+Instance went DOWN at: 1746029499
+Instance came UP at: 1746029662
+Reboot time: 163 seconds
+Total time: 174 seconds
+14 th iteration
+Update started at: 1746029700
+Monitoring instance at http://172.24.4.127... - scale level = 4
+Instance went DOWN at: 1746029710
+Instance came UP at: 1746029834
+Reboot time: 124 seconds
+Total time: 134 seconds
+15 th iteration
+Update started at: 1746029872
+Monitoring instance at http://172.24.4.127... - scale level = 5
+Instance went DOWN at: 1746029884
+Instance came UP at: 1746030008
+Reboot time: 124 seconds
+Total time: 136 seconds
+16 th iteration
+Update started at: 1746030048
+Monitoring instance at http://172.24.4.127... - scale level = 6
+Instance went DOWN at: 1746030060
+Instance came UP at: 1746030174
+Reboot time: 114 seconds
+Total time: 126 seconds
+17 th iteration
+Update started at: 1746030213
+Monitoring instance at http://172.24.4.127... - scale level = 7
+Instance went DOWN at: 1746030224
+Instance came UP at: 1746030351
+Reboot time: 127 seconds
+Total time: 138 seconds
+18 th iteration
+Update started at: 1746030389
+Monitoring instance at http://172.24.4.127... - scale level = 8
+Instance went DOWN at: 1746030401
+Instance came UP at: 1746030519
+Reboot time: 118 seconds
+Total time: 130 seconds
+19 th iteration
+Update started at: 1746030557
+Monitoring instance at http://172.24.4.127... - scale level = 9
+Instance went DOWN at: 1746030569
+Instance came UP at: 1746030691
+Reboot time: 122 seconds
+Total time: 134 seconds
+20 th iteration
+Update started at: 1746030730
+Monitoring instance at http://172.24.4.127... - scale level = 0
+Instance went DOWN at: 1746030742
+Instance came UP at: 1746030900
+Reboot time: 158 seconds
+Total time: 170 seconds
+21 th iteration
+Update started at: 1746030937
+Monitoring instance at http://172.24.4.127... - scale level = 1
+Instance went DOWN at: 1746030948
+Instance came UP at: 1746031065
+Reboot time: 117 seconds
+Total time: 128 seconds
+22 th iteration
+Update started at: 1746031103
+Monitoring instance at http://172.24.4.127... - scale level = 2
+Instance went DOWN at: 1746031114
+Instance came UP at: 1746031230
+Reboot time: 116 seconds
+Total time: 127 seconds
+23 th iteration
+Update started at: 1746031268
+Monitoring instance at http://172.24.4.127... - scale level = 3
+Instance went DOWN at: 1746031279
+Instance came UP at: 1746031439
+Reboot time: 160 seconds
+Total time: 171 seconds
+24 th iteration
+Update started at: 1746031479
+Monitoring instance at http://172.24.4.127... - scale level = 4
+Instance went DOWN at: 1746031489
+Instance came UP at: 1746031615
+Reboot time: 126 seconds
+Total time: 136 seconds
+25 th iteration
+Update started at: 1746031654
+Monitoring instance at http://172.24.4.127... - scale level = 5
+Instance went DOWN at: 1746031667
+Instance came UP at: 1746031784
+Reboot time: 117 seconds
+Total time: 130 seconds
+26 th iteration
+Update started at: 1746031822
+Monitoring instance at http://172.24.4.127... - scale level = 6
+Instance went DOWN at: 1746031834
+Instance came UP at: 1746031948
+Reboot time: 114 seconds
+Total time: 126 seconds
+27 th iteration
+Update started at: 1746031985
+Monitoring instance at http://172.24.4.127... - scale level = 7
+Instance went DOWN at: 1746032000
+Instance came UP at: 1746032125
+Reboot time: 125 seconds
+Total time: 140 seconds
+28 th iteration
+Update started at: 1746032163
+Monitoring instance at http://172.24.4.127... - scale level = 8
+Instance went DOWN at: 1746032175
+Instance came UP at: 1746032297
+Reboot time: 122 seconds
+Total time: 134 seconds
+29 th iteration
+Update started at: 1746032336
+Monitoring instance at http://172.24.4.127... - scale level = 9
+Instance went DOWN at: 1746032349
+Instance came UP at: 1746032469
+Reboot time: 120 seconds
+Total time: 133 seconds

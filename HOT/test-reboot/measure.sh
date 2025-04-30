@@ -4,8 +4,11 @@
 INSTANCE_IP="http://172.24.4.127" # IP or DNS of the instance
 CHECK_INTERVAL=1                  # Time between checks in seconds
 scale_level=-1
+max_scale_level=9
 LOG="reboot_log.txt"
-retry=60
+retry=50
+
+echo "" >"$LOG"
 
 for ((i = 0; i < retry; i++)); do
     STACK_STATUS=$(openstack stack show stack0 -f value -c stack_status)
@@ -16,7 +19,7 @@ for ((i = 0; i < retry; i++)); do
         echo "$i th iteration"
         echo "$i th iteration" >>"$LOG"
         scale_level=$((scale_level + 1))
-        if [[ $scale_level -gt 2 ]]; then
+        if [[ $scale_level -gt $max_scale_level ]]; then
             scale_level=0
         fi
         # === Step 1: Reboot the instance ===
@@ -56,7 +59,7 @@ for ((i = 0; i < retry; i++)); do
         echo "Total time: $TOTAL_TIME seconds"
         echo "Total time: $TOTAL_TIME seconds" >>"$LOG"
 
-        echo "Waiting for 60 seconds before next iteration..."
-        sleep 60
+        echo "Waiting for 30 seconds before next iteration..."
+        sleep 30
     fi
 done
