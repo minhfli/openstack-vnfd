@@ -75,11 +75,14 @@ resources:
             printf "$notify_cli" >> /var/www/html/log.txt
             systemctl restart apache2 
 
-            apt update
-            apt upgrade -y
+            # apt update
+            # apt upgrade -y
             # sleep to stablize cpu usage
             sleep 60
             eval "$notify_cli" 
+
+            # temporary fix for disable auto update packages
+            echo "" > /etc/resolv.conf
             echo "USER DATA SETUP COMPLETED"
             exit 0
           params:
