@@ -25,16 +25,16 @@ parameters: # many were changed for compatibility with tacker params.json
         cpu_threshold_hi: 420000000000.0
         cpu_threshold_lo: 180000000000.0
         count: 1
-        ram: 512
+        ram: 1024
         vcpu: 2
       - level: 2
-        cpu_threshold_hi: 420000000000.0
-        cpu_threshold_lo: 180000000000.0
-        count: 2
-        ram: 512
-        vcpu: 2
+        cpu_threshold_hi: 630000000000.0
+        cpu_threshold_lo: 270000000000.0
+        count: 1
+        ram: 1024
+        vcpu: 3
 
-  VDU1-scale-level: 0 # default scale level
+  VDU1-scale-level: 1 # default scale level, just for fastest boot
 
 
   # Example with 1 vCPUs and granularity of 300 seconds:
