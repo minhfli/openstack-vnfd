@@ -2,7 +2,7 @@ parameters: # many were changed for compatibility with tacker params.json
   nfv:
     VDU:
       VDU1:
-        vcImageId: 5930e167-4bfb-4f9c-b0b6-63805761866f # volume snapshot
+        vcImageId: jammy-apache2-base # volume snapshot
         key_name: minh
     CP:
       VDU1_CP1:

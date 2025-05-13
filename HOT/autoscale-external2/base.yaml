@@ -28,10 +28,10 @@ resources:
               count,
             ],
         }
-      # rolling_updates:
-      #   max_batch_size: 1
-      #   min_in_service: 1
-      #   pause_time: 0
+      rolling_updates:
+        max_batch_size: 1 # update 1 instance at a time
+        min_in_service: 1 # at least 1 instance must be in service
+        pause_time: 150 # wait 150 seconds before updating the next instance
       resource:
         type: VDU1.yaml
         properties:

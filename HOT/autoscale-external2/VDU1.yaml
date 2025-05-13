@@ -61,11 +61,11 @@ resources:
       scheduler_hints:
         group: { get_param: server_group }
       user_data_format: RAW
-      user_data: # wait 10-15 minutes (after created) for the server to be ready, sometimes it even takes > 1 hour
+      user_data: # wait 10-15 minutes (after created) for the server to be ready
         str_replace:
           template: |
             #!/bin/bash
-            echo "IP: $cp1 ----- Floating: $fip" > /var/www/html/index.html 
+            echo "IP: $cp1 ----- Floating: $fip" >> /var/www/html/index.html 
             printf "---- LOGGING ----\n" >> /var/www/html/log.txt
             wc_notify_var="$wc_notify"
             printf "\n------------------\n" >> /var/www/html/log.txt
