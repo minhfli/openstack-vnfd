@@ -32,7 +32,7 @@ while true; do
         "server_group=$STACK_ID" >./stack0/servers_cpu_util_p.log
 
     openstack metric aggregates --resource-type instance \
-        "(aggregate mean (metric cpu mean))" \
+        "(aggregate mean (metric memory.usage mean))" \
         "server_group=$STACK_ID" >./stack0/servers_memory.log
 
     echo "Metrics logged. Sleeping for 5 minutes..."
