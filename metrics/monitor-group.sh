@@ -27,13 +27,16 @@ while true; do
     #     "id=$SERVER2" >./stack0/server2_cpu_util_p.log
 
     # logging cpu usage for the both
+    echo "Timestamp: $(date)" >./stack0/servers_cpu_util_p.log
+    echo "Timestamp: $(date)" >./stack0/servers_memory.log
+
     openstack metric aggregates --resource-type instance \
         "(* ( / (aggregate rate:mean (metric cpu mean)) 300000000000.0) 100)" \
-        "server_group=$STACK_ID" >./stack0/servers_cpu_util_p.log
+        "server_group=$STACK_ID" >>./stack0/servers_cpu_util_p.log
 
     openstack metric aggregates --resource-type instance \
         "(aggregate mean (metric memory.usage mean))" \
-        "server_group=$STACK_ID" >./stack0/servers_memory.log
+        "server_group=$STACK_ID" >>./stack0/servers_memory.log
 
     echo "Metrics logged. Sleeping for 5 minutes..."
     sleep 300 # Wait for 5 minutes (300 seconds)
