@@ -2,7 +2,7 @@ parameters: # many were changed for compatibility with tacker params.json
   nfv:
     VDU:
       VDU1:
-        vcImageId: 0af95a93-906c-41a2-b648-a304cee38d23 # volume snapshot
+        vcImageId: b7087262-420c-4ff4-bda1-b33c1d320e1e # volume snapshot
         key_name: minh
     CP:
       VDU1_CP1:
@@ -18,23 +18,23 @@ parameters: # many were changed for compatibility with tacker params.json
       - level: 0
         cpu_threshold_hi: 210000000000.0
         cpu_threshold_lo: 90000000000.0
-        count: 1
+        count: 2
         ram: 512
         vcpu: 1
       - level: 1
         cpu_threshold_hi: 420000000000.0
         cpu_threshold_lo: 180000000000.0
-        count: 1
-        ram: 1024
+        count: 2
+        ram: 768
         vcpu: 2
       - level: 2
         cpu_threshold_hi: 630000000000.0
         cpu_threshold_lo: 270000000000.0
-        count: 1
-        ram: 1024
+        count: 2
+        ram: 768
         vcpu: 3
 
-  VDU1-scale-level: 1 # default scale level, just for fastest boot
+  VDU1-scale-level: 0 # default scale level, just for fastest boot
 
 
   # Example with 1 vCPUs and granularity of 300 seconds:

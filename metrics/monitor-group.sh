@@ -28,11 +28,16 @@ while true; do
 
     # logging cpu usage for the both
     echo "Timestamp: $(date)" >./stack0/servers_cpu_util_p.log
+    echo "Timestamp: $(date)" >./stack0/servers_cpu_util_n.log
     echo "Timestamp: $(date)" >./stack0/servers_memory.log
 
     openstack metric aggregates --resource-type instance \
         "(* ( / (aggregate rate:mean (metric cpu mean)) 300000000000.0) 100)" \
         "server_group=$STACK_ID" >>./stack0/servers_cpu_util_p.log
+
+    openstack metric aggregates --resource-type instance \
+        "(aggregate rate:mean (metric cpu mean))" \
+        "server_group=$STACK_ID" >>./stack0/servers_cpu_util_n.log
 
     openstack metric aggregates --resource-type instance \
         "(aggregate mean (metric memory.usage mean))" \

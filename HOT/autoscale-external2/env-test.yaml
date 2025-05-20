@@ -2,7 +2,7 @@ parameters: # many were changed for compatibility with tacker params.json
   nfv:
     VDU:
       VDU1:
-        vcImageId: 0af95a93-906c-41a2-b648-a304cee38d23 # volume snapshot, must be id, name won't work
+        vcImageId: b7087262-420c-4ff4-bda1-b33c1d320e1e # volume snapshot, must be id, name won't work
         key_name: minh
     CP:
       VDU1_CP1:
@@ -28,7 +28,7 @@ parameters: # many were changed for compatibility with tacker params.json
         ram: 512
         vcpu: 1
 
-  VDU1-scale-level: 0 # default scale level
+  VDU1-scale-level: 1 # default scale level
 
 
   # Example with 1 vCPUs and granularity of 300 seconds:

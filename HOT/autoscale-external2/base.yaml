@@ -177,6 +177,7 @@ resources:
       loadbalancer: { get_resource: lb }
       protocol: HTTP
       protocol_port: 80
+
   pool:
     type: OS::Octavia::Pool
     properties:

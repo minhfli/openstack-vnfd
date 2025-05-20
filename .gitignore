@@ -2,9 +2,9 @@
 
 .vscode/
 
-
 *.pub
 
 metrics/*/
+metrics/tmp.log
 
 temp*
