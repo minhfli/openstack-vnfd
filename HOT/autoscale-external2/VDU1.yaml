@@ -74,6 +74,7 @@ resources:
             printf "\n------------------\n" >> /var/www/html/log.txt
             printf "$notify_cli" >> /var/www/html/log.txt
             systemctl restart apache2 
+            apt-get remove ubuntu-release-upgrader-core -y
 
             # apt update
             # apt upgrade -y

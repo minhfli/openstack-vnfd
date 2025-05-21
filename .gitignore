@@ -8,3 +8,4 @@ metrics/*/
 metrics/tmp.log
 
 temp*
+metrics/locustfile.py
