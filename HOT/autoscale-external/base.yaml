@@ -3,9 +3,7 @@ description: >
   Base HOT for Sample VNF
 
 parameters:
-  P-VDU1:
-    type: json
-  P-VDU1_CP1:
+  nfv:
     type: json
   VDU1-scaling:
     type: json
@@ -19,12 +17,12 @@ resources:
       # flavor: { get_param: [P-VDU1, computeFlavourId] }
       flavor: { get_resource: flavor }
       name: VDU1
-      key_name: { get_param: [P-VDU1, key_name] }
+      key_name: { get_param: [nfv, VDU, VDU1, key_name] }
       # metadata: { get_param: metadata }
       block_device_mapping:
         - delete_on_termination: true
           device_name: vda
-          snapshot_id: { get_param: [P-VDU1, vcImageId] }
+          snapshot_id: { get_param: [nfv, VDU, VDU1, vcImageId] }
       networks:
         - port:
             get_resource: VDU1_CP1
@@ -34,6 +32,7 @@ resources:
           template: |
             #!/bin/bash
             echo "IP: $cp1 ----- Floating: $fip" > /var/www/html/index.html 
+            apt-get remove ubuntu-release-upgrader-core -y
             echo "USER DATA SETUP COMPLETED"
             exit 0
           params:
@@ -44,11 +43,11 @@ resources:
   VDU1_CP1:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: [P-VDU1_CP1, network] }
+      network: { get_param: [nfv, CP, VDU1_CP1, network] }
       fixed_ips:
-        - subnet: { get_param: [P-VDU1_CP1, fixed_ips, 0, subnet] }
+        - subnet: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
           # ip_address: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, ip_address] }
-      security_groups: [{ get_param: [P-VDU1_CP1, security_group] }]
+      security_groups: [{ get_param: [nfv, CP, VDU1_CP1, security_group] }]
 
   # Floating IP, remove this when deploying in a public cloud
   VDU1_floatingIP:
@@ -61,8 +60,16 @@ resources:
     type: OS::Nova::Flavor
     properties:
       is_public: false
-      ram: { get_param: [VDU1-scale-level, ram] }
-      vcpus: { get_param: [VDU1-scale-level, vcpu] }
+      ram:
+        {
+          get_param:
+            [VDU1-scaling, scale-levels, { get_param: VDU1-scale-level }, ram],
+        }
+      vcpus:
+        {
+          get_param:
+            [VDU1-scaling, scale-levels, { get_param: VDU1-scale-level }, vcpu],
+        }
 
   cpu_alarm_high:
     type: OS::Aodh::GnocchiAggregationByResourcesAlarm
@@ -72,17 +79,26 @@ resources:
       aggregation_method: rate:mean
       granularity: 300
       evaluation_periods: 2
-      threshold: { get_param: [VDU1-scale-level, cpu_threshold_hi] }
+      threshold:
+        {
+          get_param:
+            [
+              VDU1-scaling,
+              scale-levels,
+              { get_param: VDU1-scale-level },
+              cpu_threshold_hi,
+            ],
+        }
       resource_type: instance
       comparison_operator: gt
       alarm_actions:
         if:
           - { get_param: [VDU1-scaling, enable_autoscale] }
           - - str_replace:
-                template: trust+url/heat/$stack_id/scale_out
+                template: trust+url/stack_id/VDU1/SCALE_OUT
                 params:
                   url: { get_param: [VDU1-scaling, alarm_post_url] }
-                  $stack_id: { get_param: "OS::stack_id" }
+                  stack_id: { get_param: "OS::stack_id" }
       query:
         str_replace:
           template: '{"=": {"id": "VDU1_id"}}'
@@ -97,17 +113,26 @@ resources:
       aggregation_method: rate:mean
       granularity: 300
       evaluation_periods: 2
-      threshold: { get_param: [VDU1-scale-level, cpu_threshold_lo] }
+      threshold:
+        {
+          get_param:
+            [
+              VDU1-scaling,
+              scale-levels,
+              { get_param: VDU1-scale-level },
+              cpu_threshold_lo,
+            ],
+        }
       resource_type: instance
       comparison_operator: lt
       alarm_actions:
         if:
           - { get_param: [VDU1-scaling, enable_autoscale] }
           - - str_replace:
-                template: trust+url/heat/$stack_id/scale_in
+                template: trust+url/stack_id/VDU1/SCALE_IN
                 params:
                   url: { get_param: [VDU1-scaling, alarm_post_url] }
-                  $stack_id: { get_param: "OS::stack_id" }
+                  stack_id: { get_param: "OS::stack_id" }
       query:
         str_replace:
           template: '{"=": {"id": "VDU1_id"}}'
