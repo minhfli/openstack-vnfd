@@ -32,7 +32,6 @@ resources:
           template: |
             #!/bin/bash
             echo "IP: $cp1 ----- Floating: $fip" > /var/www/html/index.html 
-            apt-get remove ubuntu-release-upgrader-core -y
             echo "USER DATA SETUP COMPLETED"
             exit 0
           params:
