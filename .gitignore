@@ -6,6 +6,9 @@
 
 metrics/*/
 metrics/tmp.log
+!metrics/locustfiles/
+
+__pycache__/
 
 temp*
 metrics/locustfile.py
