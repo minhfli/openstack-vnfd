@@ -28,12 +28,12 @@ locust.stats.CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW = 60
 
 timeout = 45  # seconds, for all users
 
-wait_time1 = constant_throughput(0.6)
-wait_time2 = constant_throughput(0.8)
-wait_time3 = constant_throughput(1.2)
-wait_time4 = constant_throughput(1.4)
-url1 = "/cpu/burn.php"
-url2 = "/cpu/burn.php"
+wait_time1 = constant_throughput(0.7)
+wait_time2 = constant_throughput(0.9)
+wait_time3 = constant_throughput(1.1)
+wait_time4 = constant_throughput(1.3)
+url1 = "/cpu/burn5.php"
+url2 = "/cpu/burn4.php"
 url3 = "/cpu/burn5.php"  # burn6
 url4 = "/cpu/burn4.php"
 
