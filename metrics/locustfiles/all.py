@@ -20,22 +20,22 @@ locust.stats.PERCENTILES_TO_REPORT = [
 # for UI
 locust.stats.PERCENTILES_TO_CHART = [0.25, 0.50, 0.75, 0.95, 0.99]
 locust.stats.PERCENTILES_TO_STATISTICS = [0.25, 0.50, 0.75, 0.95, 0.99]
-locust.stats.CONSOLE_STATS_INTERVAL_SEC = 30
-locust.stats.HISTORY_STATS_INTERVAL_SEC = 30
+locust.stats.CONSOLE_STATS_INTERVAL_SEC = 15
+locust.stats.HISTORY_STATS_INTERVAL_SEC = 15
 locust.stats.CSV_STATS_INTERVAL_SEC = 10
-locust.stats.CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW = 60
+locust.stats.CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW = 30
 
 
 timeout = 45  # seconds, for all users
 
-wait_time1 = constant_throughput(0.7)
-wait_time2 = constant_throughput(0.9)
-wait_time3 = constant_throughput(1.1)
-wait_time4 = constant_throughput(1.3)
+wait_time1 = constant(0)
+wait_time2 = constant(0)
+wait_time3 = constant(0)
+wait_time4 = constant(0)
 url1 = "/cpu/burn5.php"
 url2 = "/cpu/burn4.php"
-url3 = "/cpu/burn5.php"  # burn6
-url4 = "/cpu/burn4.php"
+url3 = "/cpu/burn3.php"  # burn6
+url4 = "/cpu/burn2.php"
 
 # 120 user for vertical scaling test
 
