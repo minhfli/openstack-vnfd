@@ -26,16 +26,16 @@ locust.stats.CSV_STATS_INTERVAL_SEC = 10
 locust.stats.CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW = 30
 
 
-timeout = 45  # seconds, for all users
+timeout = 60  # seconds, for all users
 
-wait_time1 = constant(0)
-wait_time2 = constant(0)
-wait_time3 = constant(0)
-wait_time4 = constant(0)
-url1 = "/cpu/burn5.php"
-url2 = "/cpu/burn4.php"
-url3 = "/cpu/burn3.php"  # burn6
-url4 = "/cpu/burn2.php"
+wait_time1 = constant_pacing(30)
+wait_time2 = constant_pacing(20)
+wait_time3 = constant_pacing(10)
+wait_time4 = constant_pacing(5)
+url1 = "/burn.php?n=5000000"
+url2 = "/burn.php?n=2000000"
+url3 = "/burn.php?n=1000000"  # burn6
+url4 = "/burn.php?n=500000"
 
 # 120 user for vertical scaling test
 
