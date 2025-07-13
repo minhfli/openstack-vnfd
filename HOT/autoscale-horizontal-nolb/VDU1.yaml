@@ -116,14 +116,14 @@ resources:
         - subnet: { get_param: subnet1 }
       security_groups: [{ get_param: security_group }]
 
-  # LB_member:
-  #   type: OS::Octavia::PoolMember
-  #   depends_on: [VDU1_CP1, VDU1]
-  #   properties:
-  #     pool: { get_param: lb_pool }
-  #     address: { get_attr: [VDU1_CP1, fixed_ips, 0, ip_address] }
-  #     protocol_port: 80
-  #     subnet: { get_param: subnet1 }
+  LB_member:
+    type: OS::Octavia::PoolMember
+    depends_on: [wait_for_instance, VDU1]
+    properties:
+      pool: { get_param: lb_pool }
+      address: { get_attr: [VDU1_CP1, fixed_ips, 0, ip_address] }
+      protocol_port: 80
+      subnet: { get_param: subnet1 }
 
   # Floating IP, remove this when deploying in a public cloud
   VDU1_floatingIP:

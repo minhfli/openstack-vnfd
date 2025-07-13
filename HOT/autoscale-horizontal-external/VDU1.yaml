@@ -118,7 +118,7 @@ resources:
 
   LB_member:
     type: OS::Octavia::PoolMember
-    depends_on: [VDU1_CP1, VDU1]
+    depends_on: [wait_for_instance, VDU1]
     properties:
       pool: { get_param: lb_pool }
       address: { get_attr: [VDU1_CP1, fixed_ips, 0, ip_address] }
