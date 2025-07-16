@@ -15,8 +15,8 @@ parameters:
   subnet1:
     type: string
     default: private-subnet
-  # lb_pool:
-  #   type: string
+  lb_pool:
+    type: string
 
   security_group:
     type: string
