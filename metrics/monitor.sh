@@ -16,11 +16,8 @@ CPU_util_n_LOG="cpu_util_nanosecond.log"
 
 # mkdir if not exist
 
-SERVER_NAME=$(openstack server show $RESOURCE_ID -f value -c name)
-if [ -z "$SERVER_NAME" ]; then
-    echo "Error: Unable to retrieve server name for resource ID $RESOURCE_ID."
-    exit 1
-fi
+SERVER_NAME=${2:-$RESOURCE_ID}
+
 mkdir -p $SERVER_NAME
 CURRENT_DATE="$(date +%Y-%m-%d)"
 
