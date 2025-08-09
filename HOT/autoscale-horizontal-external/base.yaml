@@ -99,8 +99,8 @@ resources:
       description: Scale up if CPU > threshold
       metric: cpu ## important    cpu, not cpu_util
       aggregation_method: rate:mean
-      granularity: 300
-      evaluation_periods: 2
+      granularity: 60
+      evaluation_periods: 3
       threshold:
         {
           get_param:
@@ -133,8 +133,8 @@ resources:
       description: Scale down if CPU < threshold
       metric: cpu
       aggregation_method: rate:mean
-      granularity: 300
-      evaluation_periods: 2
+      granularity: 60
+      evaluation_periods: 3
       threshold:
         {
           get_param:

@@ -1,4 +1,4 @@
-from locust import FastHttpUser, task
+from locust import FastHttpUser, HttpUser, task
 import locust.stats
 from locust import constant_throughput, constant_pacing, constant, between
 import time
@@ -40,7 +40,7 @@ url4 = "/burn.php?n=70000"
 # 120 user for vertical scaling test
 
 
-class MyUser1(FastHttpUser):
+class MyUser1(HttpUser):
     wait_time = wait_time1
     connection_timeout = timeout
     network_timeout = timeout
@@ -50,7 +50,7 @@ class MyUser1(FastHttpUser):
         self.client.get(url1)
 
 
-class MyUser2(FastHttpUser):
+class MyUser2(HttpUser):
     wait_time = wait_time2
     connection_timeout = timeout
     network_timeout = timeout
@@ -60,7 +60,7 @@ class MyUser2(FastHttpUser):
         self.client.get(url2)
 
 
-class MyUser3(FastHttpUser):
+class MyUser3(HttpUser):
     wait_time = wait_time3
     connection_timeout = timeout
     network_timeout = timeout
@@ -70,7 +70,7 @@ class MyUser3(FastHttpUser):
         self.client.get(url3)
 
 
-class MyUser4(FastHttpUser):
+class MyUser4(HttpUser):
     wait_time = wait_time4
     connection_timeout = timeout
     network_timeout = timeout
