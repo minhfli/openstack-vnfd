@@ -100,7 +100,7 @@ resources:
       metric: cpu ## important    cpu, not cpu_util
       aggregation_method: rate:mean
       granularity: 60
-      evaluation_periods: 3
+      evaluation_periods: 5
       threshold:
         {
           get_param:
@@ -134,7 +134,7 @@ resources:
       metric: cpu
       aggregation_method: rate:mean
       granularity: 60
-      evaluation_periods: 3
+      evaluation_periods: 5
       threshold:
         {
           get_param:
@@ -165,7 +165,7 @@ resources:
     type: OS::Octavia::LoadBalancer
     properties:
       vip_subnet: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
-      flavor: f.single.medium
+      flavor: f.single.small
 
   listener:
     type: OS::Octavia::Listener

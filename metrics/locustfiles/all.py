@@ -18,29 +18,29 @@ locust.stats.PERCENTILES_TO_REPORT = [
     1.00,
 ]
 # for UI
-locust.stats.PERCENTILES_TO_CHART = [0.25, 0.50, 0.75, 0.95, 0.99]
-locust.stats.PERCENTILES_TO_STATISTICS = [0.25, 0.50, 0.75, 0.95, 0.99]
+locust.stats.PERCENTILES_TO_CHART = [0.25, 0.50, 0.60, 0.80, 0.95, 0.99]
+locust.stats.PERCENTILES_TO_STATISTICS = [0.25, 0.50, 0.60, 0.80, 0.95, 0.99]
 locust.stats.CONSOLE_STATS_INTERVAL_SEC = 30
 locust.stats.HISTORY_STATS_INTERVAL_SEC = 30
 locust.stats.CSV_STATS_INTERVAL_SEC = 30
 locust.stats.CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW = 30
 
 
-timeout = 50  # seconds, for all users
+timeout = 30  # seconds, for all users
 
 wait_time1 = constant(1)
 wait_time2 = constant(1)
 wait_time3 = constant(1)
 wait_time4 = constant(1)
-url1 = "/burn.php?n=20000"
-url2 = "/burn.php?n=30000"
-url3 = "/burn.php?n=50000"
-url4 = "/burn.php?n=70000"
+url1 = "/burn.php?n=60000"
+url2 = "/burn.php?n=70000"
+url3 = "/burn.php?n=80000"
+url4 = "/burn.php?n=90000"
 
 # 120 user for vertical scaling test
 
 
-class MyUser1(HttpUser):
+class MyUser1(FastHttpUser):
     wait_time = wait_time1
     connection_timeout = timeout
     network_timeout = timeout
@@ -50,7 +50,7 @@ class MyUser1(HttpUser):
         self.client.get(url1)
 
 
-class MyUser2(HttpUser):
+class MyUser2(FastHttpUser):
     wait_time = wait_time2
     connection_timeout = timeout
     network_timeout = timeout
@@ -60,7 +60,7 @@ class MyUser2(HttpUser):
         self.client.get(url2)
 
 
-class MyUser3(HttpUser):
+class MyUser3(FastHttpUser):
     wait_time = wait_time3
     connection_timeout = timeout
     network_timeout = timeout
@@ -70,7 +70,7 @@ class MyUser3(HttpUser):
         self.client.get(url3)
 
 
-class MyUser4(HttpUser):
+class MyUser4(FastHttpUser):
     wait_time = wait_time4
     connection_timeout = timeout
     network_timeout = timeout

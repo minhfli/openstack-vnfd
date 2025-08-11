@@ -23,7 +23,7 @@ while true; do
     openstack metric aggregates --granularity 60 -f csv --resource-type instance \
         "(* ( / (aggregate rate:mean (metric cpu mean)) 60000000000.0) 100)" \
         "server_group=$STACK_ID" >./$STACK_NAME/servers_cpu_util_p.csv
-
+    tail  ./$STACK_NAME/servers_cpu_util_p.log
     # openstack metric aggregates --resource-type instance \
     #     "(aggregate rate:mean (metric cpu mean))" \
     #     "server_group=$STACK_ID" >>./$STACK_NAME/servers_cpu_util_n.log
