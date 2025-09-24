@@ -1,0 +1,55 @@
+- ram: 512
+vcpu: 1
+
+Up 382.23 seconds
+Up 392.42 seconds
+Up 369.25 seconds
+
+Up 362.81 seconds
+Up 364.57 seconds
+Up 360.95 seconds
+
+# test with 2
+Up 336.88 seconds
+Up 358.40 seconds
+
+- ram: 1024
+vcpu: 1
+
+Up 384.91 seconds
+Up 383.00 seconds
+Up 387.86 seconds
+
+Up 380.21 seconds
+Up 385.64 seconds
+Up 383.88 seconds
+
+- ram: 1536
+vcpu: 1
+Up 358.57 seconds
+Up 364.88 seconds
+Up 363.64 seconds
+
+Up 369.08 seconds
+Up 360.03 seconds
+Up 379.64 seconds
+
+- ram: 512
+vcpu: 2
+
+Up 176.04 seconds
+Up 188.81 seconds
+Up 175.02 seconds
+Up 197.65 seconds
+
+- ram: 1024
+vcpu: 2
+
+Up 200.36 seconds
+Up 199.82 seconds
+
+- ram: 1536
+vcpu: 2
+
+Up 195.45 seconds
+Up 201.56 seconds

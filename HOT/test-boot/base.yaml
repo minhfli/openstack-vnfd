@@ -1,0 +1,93 @@
+heat_template_version: wallaby
+description: >
+  Base HOT for Sample VNF
+
+parameters:
+  nfv:
+    type: json
+
+  VDU1-scaling:
+    type: json
+
+  VDU1-scale-level:
+    type: number
+    default: 0
+
+resources:
+  stack1:
+    type: OS::Heat::Stack
+    properties:
+      template: { get_file: VDU1.yaml }
+      parameters:
+        flavor: { get_resource: VDU1_flavor }
+        image: { get_param: [nfv, VDU, VDU1, vcImageId] }
+        net1: { get_param: [nfv, CP, VDU1_CP1, network] }
+        subnet1: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+        security_group: { get_param: [nfv, CP, VDU1_CP1, security_group] }
+        key_name: { get_param: [nfv, VDU, VDU1, key_name] }
+
+  stack2:
+    depends_on: stack1
+    type: OS::Heat::Stack
+    properties:
+      template: { get_file: VDU1.yaml }
+      parameters:
+        flavor: { get_resource: VDU1_flavor }
+        image: { get_param: [nfv, VDU, VDU1, vcImageId] }
+        net1: { get_param: [nfv, CP, VDU1_CP1, network] }
+        subnet1: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+        security_group: { get_param: [nfv, CP, VDU1_CP1, security_group] }
+        key_name: { get_param: [nfv, VDU, VDU1, key_name] }
+
+  stack3:
+    depends_on: stack2
+    type: OS::Heat::Stack
+    properties:
+      template: { get_file: VDU1.yaml }
+      parameters:
+        flavor: { get_resource: VDU1_flavor }
+        image: { get_param: [nfv, VDU, VDU1, vcImageId] }
+        net1: { get_param: [nfv, CP, VDU1_CP1, network] }
+        subnet1: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+        security_group: { get_param: [nfv, CP, VDU1_CP1, security_group] }
+        key_name: { get_param: [nfv, VDU, VDU1, key_name] }
+
+  stack4:
+    depends_on: stack3
+    type: OS::Heat::Stack
+    properties:
+      template: { get_file: VDU1.yaml }
+      parameters:
+        flavor: { get_resource: VDU1_flavor }
+        image: { get_param: [nfv, VDU, VDU1, vcImageId] }
+        net1: { get_param: [nfv, CP, VDU1_CP1, network] }
+        subnet1: { get_param: [nfv, CP, VDU1_CP1, fixed_ips, 0, subnet] }
+        security_group: { get_param: [nfv, CP, VDU1_CP1, security_group] }
+        key_name: { get_param: [nfv, VDU, VDU1, key_name] }
+
+  VDU1_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      ram:
+        {
+          get_param:
+            [VDU1-scaling, scale-levels, { get_param: VDU1-scale-level }, ram],
+        }
+      vcpus:
+        {
+          get_param:
+            [VDU1-scaling, scale-levels, { get_param: VDU1-scale-level }, vcpu],
+        }
+
+outputs:
+  # scale_group_instance_ids:
+  #   description: "instance ids of VDU1 scale group instances"
+  #   value: { get_attr: [VDU1_scale_group, outputs_list, instance_id] }
+
+  # scale_group_private_ips:
+  #   description: "private ips of VDU1 scale group instances"
+  #   value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_private_ip] }
+
+  # scale_group_floating_ips:
+  #   description: "floating ips of VDU1 scale group instances"
+  #   value: { get_attr: [VDU1_scale_group, outputs_list, vdu1_floating_ip] }

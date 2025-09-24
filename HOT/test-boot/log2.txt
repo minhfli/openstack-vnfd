@@ -1,0 +1,30 @@
+- ram: 512
+vcpu: 1
+
+Up 343.12 seconds
+Up 330.73 seconds
+Up 322.24 seconds
+Up 315.73 seconds
+
+- ram: 1024
+vcpu: 1
+
+
+- ram: 1536
+vcpu: 1
+
+
+- ram: 512
+vcpu: 2
+Up 188.84 seconds
+Up 178.46 seconds
+Up 188.81 seconds
+Up 175.02 seconds
+
+- ram: 1024
+vcpu: 2
+
+
+
+- ram: 1536
+vcpu: 2
