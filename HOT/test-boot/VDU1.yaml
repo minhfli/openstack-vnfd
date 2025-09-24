@@ -7,7 +7,7 @@ parameters:
     default: u.mini.512M
   image:
     type: string
-    default: b14981a6-1239-45e2-8af7-7ce146d1bb9f
+    default: 3ba238d9-1add-4e08-bb11-1078648b3d0f
 
   net1:
     type: string
