@@ -2,7 +2,7 @@ parameters: # many were changed for compatibility with tacker params.json
   nfv:
     VDU:
       VDU1:
-        vcImageId: 3ba238d9-1add-4e08-bb11-1078648b3d0f # volume snapshot, must be id, name won't work
+        vcImageId: 976be228-66ce-4259-ae64-eb7589c405ff # volume snapshot, must be id, name won't work
         key_name: minh
     CP:
       VDU1_CP1:
